@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://u38qbh1wiqph"]
+
+[ext_resource type="Texture2D" uid="uid://um563vhlb7d4" path="res://Assets/Sprites/table.png" id="1_1sqqh"]
+[ext_resource type="Script" uid="uid://cs88gtrcu58rf" path="res://Scripts/lineTrigger.gd" id="2_l5bjd"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_mdr45"]
+b = Vector2(0, -137)
+
+[node name="Table" type="Sprite2D" unique_id=1331311115]
+rotation = 1.5707964
+texture = ExtResource("1_1sqqh")
+
+[node name="GoalLineSouth" type="Area2D" parent="." unique_id=750189930]
+position = Vector2(353, 69.999985)
+
+[node name="Trigger" type="CollisionShape2D" parent="GoalLineSouth" unique_id=596989533]
+shape = SubResource("SegmentShape2D_mdr45")
+debug_color = Color(0, 0.59781516, 0.71432704, 0.41960785)
+script = ExtResource("2_l5bjd")
+
+[node name="GoalLineNorth" type="Area2D" parent="." unique_id=1742243734]
+position = Vector2(-345, 70)
+
+[node name="Trigger" type="CollisionShape2D" parent="GoalLineNorth" unique_id=2012191310]
+shape = SubResource("SegmentShape2D_mdr45")
