@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cc16ncw2jvu4m" path="res://Assets/Scene/puck.tscn" id="3_3gjr4"]
 [ext_resource type="Script" uid="uid://pm2tk1y0cnn7" path="res://Scripts/puck.gd" id="4_y0r01"]
 [ext_resource type="Script" uid="uid://bx4bwqydmvejb" path="res://Scripts/gameManager.gd" id="5_86wvc"]
+[ext_resource type="Script" uid="uid://ce3j1n0kac1th" path="res://Scripts/game_state.gd" id="7_eipe5"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_eiiri"]
 load_path = "res://.godot/imported/table.png-1c1366adec3c0bd92464a1fe6da1281c.ctex"
@@ -44,5 +45,9 @@ puck_path = NodePath("../Table/Puck")
 northPaddlePath = NodePath("../Table/PaddleN")
 southPaddlePath = NodePath("../Table/PaddleS")
 uiPath = NodePath("../Canvas")
+tablePath = NodePath("../Table")
+
+[node name="GameState" type="Node" parent="." unique_id=466700336]
+script = ExtResource("7_eipe5")
 
 [editable path="Table/Puck"]
