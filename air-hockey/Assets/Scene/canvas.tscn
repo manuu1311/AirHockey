@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://dtkvtgobtj2dl"]
+
+[ext_resource type="Script" uid="uid://t43h7ik1ytos" path="res://Scripts/ui.gd" id="1_tas5g"]
+[ext_resource type="Texture2D" uid="uid://brscb1b685i2e" path="res://Assets/Sprites/button.png" id="2_yf3t2"]
+[ext_resource type="Script" path="res://Scripts/restart_button.gd" id="3_ajcib"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_82o8l"]
+font_size = 60
+font_color = Color(0.89411765, 0.105882354, 0.20392157, 1)
+outline_size = 24
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
+
+[node name="Canvas" type="CanvasLayer" unique_id=916726359]
+
+[node name="UI" type="Control" parent="." unique_id=1434967730]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -500.0
+offset_right = 400.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0062621)
+script = ExtResource("1_tas5g")
+
+[node name="ScoreN" type="Label" parent="UI" unique_id=1002112226]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -74.0
+offset_top = 175.0
+offset_right = -40.0
+offset_bottom = 258.0
+grow_horizontal = 0
+text = "0"
+label_settings = SubResource("LabelSettings_82o8l")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreS" type="Label" parent="UI" unique_id=9174358]
+layout_direction = 4
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -258.0
+offset_right = -41.0
+offset_bottom = -175.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "0"
+label_settings = SubResource("LabelSettings_82o8l")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestartButton" type="TextureButton" parent="UI" unique_id=614793682]
+modulate = Color(0.6313726, 0.2784314, 0, 1)
+layout_direction = 3
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -89.0
+offset_top = -41.5
+offset_bottom = 41.5
+grow_horizontal = 0
+grow_vertical = 2
+texture_normal = ExtResource("2_yf3t2")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("3_ajcib")
+
+[connection signal="buttonPressed" from="UI/RestartButton" to="UI" method="_on_restart_button_button_pressed"]

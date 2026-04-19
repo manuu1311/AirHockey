@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://sadd3mdd0w7v"]
 
+[ext_resource type="PackedScene" uid="uid://dtkvtgobtj2dl" path="res://Assets/Scene/canvas.tscn" id="1_86wvc"]
 [ext_resource type="PackedScene" uid="uid://u38qbh1wiqph" path="res://Assets/Scene/table.tscn" id="1_eiiri"]
 [ext_resource type="PackedScene" uid="uid://cdrswyk8arvu1" path="res://Assets/Scene/paddle.tscn" id="2_3gjr4"]
 [ext_resource type="PackedScene" uid="uid://cc16ncw2jvu4m" path="res://Assets/Scene/puck.tscn" id="3_3gjr4"]
@@ -11,9 +12,11 @@ load_path = "res://.godot/imported/table.png-1c1366adec3c0bd92464a1fe6da1281c.ct
 
 [node name="Game" type="Node2D" unique_id=1499139562]
 
+[node name="Canvas" parent="." unique_id=916726359 instance=ExtResource("1_86wvc")]
+
 [node name="Table" parent="." unique_id=1331311115 instance=ExtResource("1_eiiri")]
-position = Vector2(400, 500)
-scale = Vector2(1.2, 1.2)
+position = Vector2(400, 450)
+scale = Vector2(1.1, 1.1)
 texture = SubResource("CompressedTexture2D_eiiri")
 
 [node name="PaddleN" parent="Table" unique_id=1823900199 instance=ExtResource("2_3gjr4")]
