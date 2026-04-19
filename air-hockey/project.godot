@@ -11,12 +11,26 @@ config_version=5
 [application]
 
 config/name="AirHockey"
+run/main_scene="res://Assets/Scene/Level/mainGame.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=800
+window/size/viewport_height=1000
 
 [dotnet]
 
 project/assembly_name="AirHockey"
+
+[layer_names]
+
+2d_physics/layer_1="Walls"
+2d_physics/layer_2="Paddles"
+2d_physics/layer_3="Puck"
+2d_physics/layer_4="GoalLines"
+2d_physics/layer_5="MiddleWall"
 
 [physics]
 
