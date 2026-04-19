@@ -40,5 +40,9 @@ scale = Vector2(0.11, 0.11)
 
 [node name="GameManager" type="Node" parent="." unique_id=133710377]
 script = ExtResource("5_86wvc")
+puck_path = NodePath("../Table/Puck")
+northPaddlePath = NodePath("../Table/PaddleN")
+southPaddlePath = NodePath("../Table/PaddleS")
+uiPath = NodePath("../Canvas")
 
 [editable path="Table/Puck"]

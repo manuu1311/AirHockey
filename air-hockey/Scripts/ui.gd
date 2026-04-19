@@ -1,14 +1,16 @@
-extends Control
+extends CanvasLayer
 
 
-@onready var scoren= $ScoreN
-@onready var scores= %ScoreS
-signal restart
+@onready var scoren= $UI/ScoreN
+@onready var scores= $UI/ScoreS
+signal restartButtonPressedSignal
 
 func IncreaseScore(playerScores: Array):
 	scoren.text=playerScores[1]
 	scores.text=playerScores[0]
 
 
+
+
 func restartButtonPressed() -> void:
-	emit_signal("restart")
+	emit_signal("restartButtonPressedSignal")

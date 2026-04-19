@@ -1,3 +1,0 @@
-extends TextureButton
-
-signal buttonPressed

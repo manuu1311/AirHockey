@@ -20,13 +20,15 @@ func _ready():
 	puck = get_node(puck_path)
 	northPaddle = get_node(northPaddlePath)
 	southPaddle = get_node(southPaddlePath)
+	ui=get_node(uiPath)
+	ui.restartButtonPressedSignal.connect(ResetBoard)
 
-	#start_game()
 	
 #reset the whole board before each point
 func ResetBoard():
 	ResetPaddles()
 	puck.reset()
+	
 #reset paddles to their starting positions
 func ResetPaddles():
 	northPaddle.reset()
