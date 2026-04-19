@@ -46,6 +46,7 @@ northPaddlePath = NodePath("../Table/PaddleN")
 southPaddlePath = NodePath("../Table/PaddleS")
 uiPath = NodePath("../Canvas")
 tablePath = NodePath("../Table")
+winScore = 1
 
 [node name="GameState" type="Node" parent="." unique_id=466700336]
 script = ExtResource("7_eipe5")

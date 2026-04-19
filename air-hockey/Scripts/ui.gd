@@ -13,7 +13,7 @@ func _ready() -> void:
 	finalTextLabel.hide()
 	
 #increase score after goal
-func IncreaseScore(playerScores: Array):
+func UpdateScore(playerScores: Array):
 	scoren.text=str(playerScores[1])
 	scores.text=str(playerScores[0])
 
@@ -23,8 +23,7 @@ func restartButtonPressed() -> void:
 	emit_signal("restartButtonPressedSignal")
 	
 func endGame(player: int):
-	countdownLabel.add_theme_font_size_override("font_size", 9)
-	countdownLabel.text="Player "+str(player)+" wins\nPress Restart Button to restart the game"
+	countdownLabel.text="Player "+str(player)+" wins\nRestart game to play again"
 	countdownLabel.show()
 	
 #start countdown before point start

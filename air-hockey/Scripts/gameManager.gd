@@ -32,6 +32,7 @@ func _ready():
 func onResetButton():
 	if GameState.game_state==GameState.GameStates.ENDED:
 		playerScores=[0,0]
+		ui.UpdateScore(playerScores)
 	ResetBoard()
 #reset the whole board before each point
 func ResetBoard():
@@ -51,7 +52,7 @@ func ResetPaddles():
 #increase score for the given player (int 1, -1)
 func IncreaseScore(player: int):
 	playerScores[player]+=1
-	ui.IncreaseScore(playerScores)
+	ui.UpdateScore(playerScores)
 	
 #function called on signal emitted from goal lines
 func GoalScored(player:int):

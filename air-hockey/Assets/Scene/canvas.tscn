@@ -95,9 +95,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.5582103, 1.3596937e-06, 3.85046e-07, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 26
-text = "Player 0 won
-Press restartbutton to play again"
+theme_override_font_sizes/font_size = 50
+text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -116,8 +115,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.5582103, 1.3596937e-06, 3.85046e-07, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 71
-text = "0"
+theme_override_font_sizes/font_size = 30
+text = "Player 0 won
+Restart game to play again"
 horizontal_alignment = 1
 vertical_alignment = 1
 
