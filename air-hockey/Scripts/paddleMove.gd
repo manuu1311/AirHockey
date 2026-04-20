@@ -145,7 +145,7 @@ func handle_ai_hard(delta):
 					print('attacking!')
 				var attack_offset = Vector2(0, -20)
 				last_target = puck_pos + attack_offset
-				temp_speed*=3
+				temp_speed*=5
 			
 			else:
 				# IDLE 
