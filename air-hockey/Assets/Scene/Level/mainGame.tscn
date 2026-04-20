@@ -25,10 +25,12 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 puck_path = NodePath("../Puck")
-reaction_time = 0.3
+reaction_time = 0.2
 speed = 300.0
-difficulty = 1
-middle_line = 450.0
+difficulty = 2
+middle_line = 470.0
+global_goal_line = 90.0
+goal_width = Vector2(330, 470)
 
 [node name="PaddleS" parent="Table" unique_id=560494842 instance=ExtResource("2_3gjr4")]
 position = Vector2(226, 0)
