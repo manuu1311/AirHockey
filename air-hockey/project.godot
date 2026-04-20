@@ -23,6 +23,7 @@ GameState="*uid://ce3j1n0kac1th"
 
 window/size/viewport_width=800
 window/size/viewport_height=900
+window/stretch/mode="viewport"
 
 [dotnet]
 
