@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://buk5w0winnywt"]
+
+[ext_resource type="Script" uid="uid://crmg4vo825wfw" path="res://Assets/Scene/Level/main_menu.gd" id="1_h4ed0"]
+
+[node name="MainMenu" type="Control" unique_id=784899984]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h4ed0")
+
+[node name="background" type="ColorRect" parent="." unique_id=1496423048]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2946382, 3.218744e-07, 8.4228816e-08, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="background" unique_id=68436470]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -184.0
+offset_top = -258.5
+offset_right = 184.0
+offset_bottom = 258.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 44
+
+[node name="Easy" type="Button" parent="background/VBoxContainer" unique_id=446651776]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.35128844, 0.6191588, 7.70092e-07, 1)
+theme_override_colors/font_pressed_color = Color(0.051454723, 0.12104302, 6.016344e-09, 1)
+theme_override_colors/font_hover_color = Color(0.1255318, 0.24354291, 1.4439226e-07, 1)
+theme_override_font_sizes/font_size = 99
+text = "Easy"
+
+[node name="Normal" type="Button" parent="background/VBoxContainer" unique_id=68532188]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.85455215, 0.43245634, 3.85046e-07, 1)
+theme_override_colors/font_pressed_color = Color(0.18501207, 0.07329429, 1.2032688e-08, 1)
+theme_override_colors/font_hover_color = Color(0.4146426, 0.19603941, 0, 1)
+theme_override_font_sizes/font_size = 99
+text = "Normal"
+
+[node name="Hard" type="Button" parent="background/VBoxContainer" unique_id=523189535]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.8383309, 0, 0.020577822, 1)
+theme_override_colors/font_pressed_color = Color(0.20995405, 0, 0.0010541477, 1)
+theme_override_colors/font_hover_color = Color(0.40246043, 0, 0.003907351, 1)
+theme_override_font_sizes/font_size = 99
+text = "Hard"
+
+[connection signal="pressed" from="background/VBoxContainer/Easy" to="." method="_on_button_pressed" binds= [0]]
+[connection signal="pressed" from="background/VBoxContainer/Normal" to="." method="_on_button_pressed" binds= [1]]
+[connection signal="pressed" from="background/VBoxContainer/Hard" to="." method="_on_button_pressed" binds= [2]]

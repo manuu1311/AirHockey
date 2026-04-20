@@ -14,7 +14,6 @@ var timer := 0.0
 var last_target : Vector2
 @export var speed := 600.0
 var home_position
-@export var difficulty: int
 var handle_ai: Callable
 @export var middle_line: float
 @export var global_goal_line:= 870.0
@@ -36,11 +35,11 @@ func reset():
 	unlocked=false
 	position= start_position
 	last_target=position
-	if difficulty == 0:
+	if GameState.difficulty == 0:
 		handle_ai = Callable(self, "handle_ai_easy")
-	elif difficulty == 1:
+	elif GameState.difficulty == 1:
 		handle_ai = Callable(self, "handle_ai_normal")
-	elif difficulty==2:
+	elif GameState.difficulty==2:
 		handle_ai = Callable(self, "handle_ai_hard")
 		#adjust parameters
 		speed=600
