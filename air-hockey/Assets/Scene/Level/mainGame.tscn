@@ -23,14 +23,19 @@ texture = SubResource("CompressedTexture2D_eiiri")
 [node name="PaddleN" parent="Table" unique_id=1823900199 instance=ExtResource("2_3gjr4")]
 position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
-start_position = Vector2(226, 0)
-player = -1
+start_position = Vector2(-226, 0)
+puck_path = NodePath("../Puck")
+reaction_time = 0.3
+speed = 300.0
+difficulty = 1
+middle_line = 450.0
 
 [node name="PaddleS" parent="Table" unique_id=560494842 instance=ExtResource("2_3gjr4")]
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
 player = 1
+puck_path = NodePath("../Puck")
 
 [node name="Puck" parent="Table" unique_id=430235678 instance=ExtResource("3_3gjr4")]
 script = ExtResource("4_y0r01")
@@ -46,7 +51,6 @@ northPaddlePath = NodePath("../Table/PaddleN")
 southPaddlePath = NodePath("../Table/PaddleS")
 uiPath = NodePath("../Canvas")
 tablePath = NodePath("../Table")
-winScore = 1
 
 [node name="GameState" type="Node" parent="." unique_id=466700336]
 script = ExtResource("7_eipe5")

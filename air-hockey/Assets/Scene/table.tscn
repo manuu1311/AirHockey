@@ -3,17 +3,17 @@
 [ext_resource type="Texture2D" uid="uid://um563vhlb7d4" path="res://Assets/Sprites/table.png" id="1_1sqqh"]
 [ext_resource type="Script" uid="uid://bjlkcit3bpuwx" path="res://Scripts/table.gd" id="2_mdr45"]
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_1sqqh"]
-a = Vector2(-346, -159)
-b = Vector2(-346, 162)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1sqqh"]
+size = Vector2(100, 370.45)
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_l5bjd"]
-a = Vector2(391, -3)
-b = Vector2(-254, 0)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l5bjd"]
+size = Vector2(800, 100)
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_abhex"]
-a = Vector2(346, -159)
-b = Vector2(346, 162)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mdr45"]
+size = Vector2(800, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_abhex"]
+size = Vector2(100, 370)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_0x6sf"]
 a = Vector2(0, -181.115)
@@ -37,28 +37,29 @@ script = ExtResource("2_mdr45")
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/NorthWall" unique_id=1050267165]
-shape = SubResource("SegmentShape2D_1sqqh")
+position = Vector2(-396, 1.730971e-05)
+shape = SubResource("RectangleShape2D_1sqqh")
 
 [node name="LeftWall" type="StaticBody2D" parent="Walls" unique_id=1262844076]
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/LeftWall" unique_id=1609659762]
-position = Vector2(-63.505, 188.05)
-shape = SubResource("SegmentShape2D_l5bjd")
+position = Vector2(1.0000057, 233)
+shape = SubResource("RectangleShape2D_l5bjd")
 
 [node name="RightWall" type="StaticBody2D" parent="Walls" unique_id=987232983]
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/RightWall" unique_id=1603226976]
-position = Vector2(-65.32, -181.11)
-shape = SubResource("SegmentShape2D_l5bjd")
+position = Vector2(0, -233)
+shape = SubResource("RectangleShape2D_mdr45")
 
 [node name="SouthWall" type="StaticBody2D" parent="Walls" unique_id=1957887670]
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/SouthWall" unique_id=1813091321]
-position = Vector2(8.17, 0)
-shape = SubResource("SegmentShape2D_abhex")
+position = Vector2(405, -1.57361e-06)
+shape = SubResource("RectangleShape2D_abhex")
 
 [node name="MiddleWall" type="StaticBody2D" parent="Walls" unique_id=785445662]
 collision_layer = 16

@@ -34,6 +34,7 @@ func onResetButton():
 		playerScores=[0,0]
 		ui.UpdateScore(playerScores)
 	ResetBoard()
+	
 #reset the whole board before each point
 func ResetBoard():
 	print('Resetting board')
@@ -43,6 +44,10 @@ func ResetBoard():
 	ui.startCountdown()
 	await ui.countdownFinished
 	GameState.game_state=GameState.GameStates.PLAYING
+	#unlock ai paddles after countdown finish
+	for paddle in [northPaddle,southPaddle]:
+		if paddle.player==0:
+			paddle.unlocked=true
 	
 #reset paddles to their starting positions
 func ResetPaddles():
