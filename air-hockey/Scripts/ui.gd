@@ -20,7 +20,8 @@ func UpdateScore(playerScores: Array):
 #restartbutton event
 func restartButtonPressed() -> void:
 	print("Restart button pressed")
-	emit_signal("restartButtonPressedSignal")
+	if GameState.game_state!=GameState.GameStates.COUNTDOWN:
+		emit_signal("restartButtonPressedSignal")
 	
 func endGame(player: int):
 	countdownLabel.text="Player "+str(player)+" wins\nRestart game to play again"
@@ -40,3 +41,7 @@ func startCountdown():
 
 	countdownLabel.hide()
 	countdownFinished.emit()
+
+
+func _on_texture_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://Assets/Scene/Level/mainMenu.tscn")
