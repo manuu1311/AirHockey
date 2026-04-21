@@ -3,6 +3,8 @@ extends RigidBody2D
 var startingPos: Vector2
 var should_reset=false
 
+var maxspeed=2000
+
 func _ready() -> void:
 	startingPos=position
 #reset the position
@@ -28,3 +30,7 @@ func _integrate_forces(state):
 		set_deferred("process_mode", Node.PROCESS_MODE_INHERIT)
 		should_reset = false
 	
+func _physics_process(_delta):
+	if linear_velocity.length() > maxspeed:
+		linear_velocity = linear_velocity.limit_length(maxspeed)
+		

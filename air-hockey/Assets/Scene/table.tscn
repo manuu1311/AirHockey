@@ -19,8 +19,17 @@ size = Vector2(100, 370)
 a = Vector2(0, -181.115)
 b = Vector2(0, 186.95)
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_emyag"]
-b = Vector2(22, 22)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0x6sf"]
+size = Vector2(20, 37.909813)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_emyag"]
+size = Vector2(20, 34.449997)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yloqi"]
+size = Vector2(39.899994, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ubh0d"]
+size = Vector2(20, 38.085144)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_mdr45"]
 b = Vector2(0, -137)
@@ -73,32 +82,34 @@ shape = SubResource("SegmentShape2D_0x6sf")
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/NEWall" unique_id=647666229]
-position = Vector2(-324.99997, -185.00003)
-rotation = 1.5707965
-shape = SubResource("SegmentShape2D_emyag")
+position = Vector2(-341, -181.99998)
+rotation = 0.8517207
+scale = Vector2(0.9999999, 0.9999999)
+shape = SubResource("RectangleShape2D_0x6sf")
 
 [node name="NWWall" type="StaticBody2D" parent="Walls" unique_id=1173137090]
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/NWWall" unique_id=444196862]
-position = Vector2(-347.06, 167.55002)
-shape = SubResource("SegmentShape2D_emyag")
+position = Vector2(-347, 179.00003)
+rotation = -0.6230825
+shape = SubResource("RectangleShape2D_emyag")
 
 [node name="SWWall" type="StaticBody2D" parent="Walls" unique_id=1880029019]
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/SWWall" unique_id=2034700607]
-position = Vector2(332.605, 188.89998)
-rotation = -1.5707964
-shape = SubResource("SegmentShape2D_emyag")
+position = Vector2(355, 180.99998)
+rotation = -0.8953539
+shape = SubResource("RectangleShape2D_yloqi")
 
 [node name="SEWall" type="StaticBody2D" parent="Walls" unique_id=1302079746]
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/SEWall" unique_id=1011867025]
-position = Vector2(353.62006, -163.91487)
-rotation = -3.1415923
-shape = SubResource("SegmentShape2D_emyag")
+position = Vector2(352, -179.00002)
+rotation = -0.70162237
+shape = SubResource("RectangleShape2D_ubh0d")
 
 [node name="GoalLlines" type="Node2D" parent="." unique_id=2102056331]
 

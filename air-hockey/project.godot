@@ -11,8 +11,8 @@ config_version=5
 [application]
 
 config/name="AirHockey"
-run/main_scene="uid://buk5w0winnywt"
-config/features=PackedStringArray("4.6", "GL Compatibility")
+run/main_scene="uid://c5ke2yt65q3hg"
+config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 run/max_fps=60
 config/icon="res://icon.svg"
 
@@ -29,6 +29,10 @@ window/stretch/mode="viewport"
 [dotnet]
 
 project/assembly_name="AirHockey"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_rl_agents/plugin.cfg")
 
 [layer_names]
 

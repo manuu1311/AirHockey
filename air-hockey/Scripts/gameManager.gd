@@ -17,6 +17,7 @@ var table
 var playerScores: Array=[0,0]
 
 @export var winScore: int=5
+@export var training: bool
 
 func _ready():
 	puck = get_node(puck_path)
@@ -26,11 +27,14 @@ func _ready():
 	table=get_node(tablePath)
 	ui.restartButtonPressedSignal.connect(onResetButton)
 	table.goalScored.connect(GoalScored)
+	GameState.training=training
+	print('training: ',GameState.training)
+	print('difficulty: ',GameState.difficulty)
 	ResetBoard()
 
 #routine after reset button is clicked
 func onResetButton():
-	if GameState.game_state==GameState.GameStates.ENDED:
+	if GameState.game_state==GameState.GameStates.ENDED or GameState.training==true:
 		playerScores=[0,0]
 		ui.UpdateScore(playerScores)
 	ResetBoard()
@@ -41,12 +45,13 @@ func ResetBoard():
 	GameState.game_state=GameState.GameStates.COUNTDOWN
 	ResetPaddles()
 	puck.reset()
-	ui.startCountdown()
-	await ui.countdownFinished
+	if GameState.training==false:
+		ui.startCountdown()
+		await ui.countdownFinished
 	GameState.game_state=GameState.GameStates.PLAYING
 	#unlock ai paddles after countdown finish
 	for paddle in [northPaddle,southPaddle]:
-		if paddle.player==0:
+		if paddle.player>=1:
 			paddle.unlocked=true
 	
 #reset paddles to their starting positions
@@ -56,8 +61,9 @@ func ResetPaddles():
 	
 #increase score for the given player (int 1, -1)
 func IncreaseScore(player: int):
-	playerScores[player]+=1
-	ui.UpdateScore(playerScores)
+	if GameState.training==false:
+		playerScores[player]+=1
+		ui.UpdateScore(playerScores)
 	
 #function called on signal emitted from goal lines
 func GoalScored(player:int):
@@ -74,5 +80,6 @@ func GoalScored(player:int):
 	
 #reset table and start new point
 func newPoint():
-	await get_tree().create_timer(2).timeout
+	if GameState.training==false:
+		await get_tree().create_timer(2).timeout
 	ResetBoard()

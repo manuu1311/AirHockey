@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://c5ke2yt65q3hg"]
+
+[ext_resource type="PackedScene" uid="uid://dtkvtgobtj2dl" path="res://Assets/Scene/canvas.tscn" id="1_vp5px"]
+[ext_resource type="PackedScene" uid="uid://u38qbh1wiqph" path="res://Assets/Scene/table.tscn" id="2_5ophu"]
+[ext_resource type="PackedScene" uid="uid://cdrswyk8arvu1" path="res://Assets/Scene/paddle.tscn" id="3_k6ksb"]
+[ext_resource type="Script" uid="uid://d1fvow3eobab8" path="res://Assets/Scene/ai_controller.gd" id="4_5ophu"]
+[ext_resource type="PackedScene" uid="uid://cc16ncw2jvu4m" path="res://Assets/Scene/puck.tscn" id="4_kxt7r"]
+[ext_resource type="Script" uid="uid://pm2tk1y0cnn7" path="res://Scripts/puck.gd" id="5_vj87g"]
+[ext_resource type="Script" uid="uid://bx4bwqydmvejb" path="res://Scripts/gameManager.gd" id="6_hr5g1"]
+[ext_resource type="Script" uid="uid://ce3j1n0kac1th" path="res://Scripts/game_state.gd" id="7_iu0u3"]
+[ext_resource type="Script" uid="uid://dwc001u0axl10" path="res://addons/godot_rl_agents/sync.gd" id="9_k6ksb"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_eiiri"]
+load_path = "res://.godot/imported/table.png-1c1366adec3c0bd92464a1fe6da1281c.ctex"
+
+[node name="Game" type="Node2D" unique_id=1499139562]
+
+[node name="Canvas" parent="." unique_id=916726359 instance=ExtResource("1_vp5px")]
+
+[node name="Table" parent="." unique_id=1331311115 instance=ExtResource("2_5ophu")]
+position = Vector2(400, 450)
+scale = Vector2(1.1, 1.1)
+texture = SubResource("CompressedTexture2D_eiiri")
+
+[node name="PaddleN" parent="Table" unique_id=1823900199 instance=ExtResource("3_k6ksb")]
+position = Vector2(-226, 0)
+scale = Vector2(0.12, 0.12)
+start_position = Vector2(-226, 0)
+player = 1
+ai = true
+puck_path = NodePath("../Puck")
+reaction_time = 0.2
+speed = 300.0
+middle_line = 470.0
+global_goal_line = 90.0
+goal_width = Vector2(330, 470)
+airl_path = NodePath("AIController2D")
+
+[node name="AIController2D" type="Node2D" parent="Table/PaddleN" unique_id=1602674295 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+script = ExtResource("4_5ophu")
+paddle = NodePath("..")
+opponent = NodePath("../../PaddleS")
+puck = NodePath("../../Puck")
+control_mode = 2
+metadata/_custom_type_script = "uid://p26yw7jrrnqk"
+
+[node name="PaddleS" parent="Table" unique_id=560494842 groups=["paddle"] instance=ExtResource("3_k6ksb")]
+position = Vector2(226, 0)
+scale = Vector2(0.12, 0.12)
+start_position = Vector2(226, 0)
+ai = true
+puck_path = NodePath("../Puck")
+airl_path = NodePath("AIController2D")
+
+[node name="AIController2D" type="Node2D" parent="Table/PaddleS" unique_id=1490849882 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+script = ExtResource("4_5ophu")
+paddle = NodePath("..")
+opponent = NodePath("../../PaddleN")
+puck = NodePath("../../Puck")
+metadata/_custom_type_script = "uid://p26yw7jrrnqk"
+
+[node name="Puck" parent="Table" unique_id=430235678 groups=["puck"] instance=ExtResource("4_kxt7r")]
+script = ExtResource("5_vj87g")
+
+[node name="CollisionShape2D" parent="Table/Puck" index="0" unique_id=818533871 groups=["puck"]]
+position = Vector2(4.695, 1.97)
+scale = Vector2(0.11, 0.11)
+
+[node name="GameManager" type="Node" parent="." unique_id=133710377]
+script = ExtResource("6_hr5g1")
+puck_path = NodePath("../Table/Puck")
+northPaddlePath = NodePath("../Table/PaddleN")
+southPaddlePath = NodePath("../Table/PaddleS")
+uiPath = NodePath("../Canvas")
+tablePath = NodePath("../Table")
+training = true
+
+[node name="GameState" type="Node" parent="." unique_id=466700336]
+script = ExtResource("7_iu0u3")
+training = true
+
+[node name="Sync" type="Node" parent="." unique_id=1411434262]
+script = ExtResource("9_k6ksb")
+metadata/_custom_type_script = "uid://dwc001u0axl10"
+
+[editable path="Table/Puck"]
