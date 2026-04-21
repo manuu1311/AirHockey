@@ -81,6 +81,7 @@ training = true
 
 [node name="Sync" type="Node" parent="." unique_id=1411434262]
 script = ExtResource("9_k6ksb")
+speed_up = 8.0
 metadata/_custom_type_script = "uid://dwc001u0axl10"
 
 [editable path="Table/Puck"]
