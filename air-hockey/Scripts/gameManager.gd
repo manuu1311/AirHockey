@@ -58,7 +58,7 @@ func ResetBoard():
 	GameState.game_state=GameState.GameStates.PLAYING
 	#unlock ai paddles after countdown finish
 	for paddle in [northPaddle,southPaddle]:
-		if paddle.player>=1:
+		if paddle.ai_flag==true:
 			paddle.unlocked=true
 	
 #reset paddles to their starting positions

@@ -28,29 +28,25 @@ var attack_threshold:=500
 @export var airl_path: NodePath 
 var airl: Node2D
 var airl_speed:=400
+@export var ai_training:bool
 
 
 func _ready() -> void:
-		home_position=to_global(start_position)
-		if ai_flag:
-			if GameState.difficulty == 0:
-				handle_ai = Callable(self, "handle_ai_easy")
-			elif GameState.difficulty == 1:
-				handle_ai = Callable(self, "handle_ai_normal")
-			elif GameState.difficulty==2:
-				handle_ai = Callable(self, "handle_ai_hard")
-				#adjust parameters
-				speed=600
-				reaction_time=0.1
-			elif GameState.difficulty==3:
-				handle_ai = Callable(self, "handle_ai_rl")
-				airl=get_node(airl_path)
-		print('chosen difficulty ',GameState.difficulty)
-			
-		#goal_line=to_global(Vector2(0,goal_line)).y
-		#convert relative x position of goal line to global positions
-		#goal_width.x=to_global(Vector2(goal_width.x, 0)).x
-		#goal_width.y=to_global(Vector2(goal_width.y, 0)).x
+	home_position=to_global(start_position)
+	if GameState.difficulty == 0:
+		handle_ai = Callable(self, "handle_ai_easy")
+	elif GameState.difficulty == 1:
+		handle_ai = Callable(self, "handle_ai_normal")
+	elif GameState.difficulty==2:
+		handle_ai = Callable(self, "handle_ai_hard")
+		#adjust parameters
+		speed=600
+		reaction_time=0.1
+	elif GameState.difficulty==3:
+		print('handle rl!')
+		handle_ai = Callable(self, "handle_ai_rl")
+		airl=get_node(airl_path)
+		
 func reset():
 	unlocked=false
 	position= start_position
@@ -61,7 +57,26 @@ func reset():
 			print('reward obtained by player ',player,': ',airl.reward)
 			airl.done=true
 		else:
-			print('couldnt find airl :(')
+			print('couldnt find airl: no reward!')
+	if ai_flag and not ai_training:
+		#if training, randomise difficulties
+		print(GameState.training)
+		if GameState.training==true:
+			var weights=[0.6,0.3,0.1,0.0]
+			GameState.difficulty =weighted_random_index(weights)
+			print('Difficulty changed to ',GameState.difficulty)
+		if GameState.difficulty == 0:
+			handle_ai = Callable(self, "handle_ai_easy")
+		elif GameState.difficulty == 1:
+			handle_ai = Callable(self, "handle_ai_normal")
+		elif GameState.difficulty==2:
+			handle_ai = Callable(self, "handle_ai_hard")
+			#adjust parameters
+			speed=600
+			reaction_time=0.1
+		elif GameState.difficulty==3 or ai_training:
+			handle_ai = Callable(self, "handle_ai_rl")
+			airl=get_node(airl_path)
 #move paddle
 func _physics_process(delta):
 	if GameState.game_state==GameState.GameStates.PLAYING or GameState.game_state==GameState.GameStates.ENDED:
@@ -72,7 +87,7 @@ func _physics_process(delta):
 		velocity = velocity.limit_length(maxspeed)
 		move_and_slide()
 		#if training ai: detect collisions for reward
-		if GameState.training and ai_flag:
+		if GameState.training and ai_flag and GameState.difficulty==3:
 			passive_reward(delta)
 			puck_position_rew(delta)
 
@@ -204,5 +219,20 @@ func puck_position_rew(delta:float):
 #passive negative reward to promote shorter points
 func passive_reward(delta: float):
 	airl.passive_reward(delta)
-	
+
+#random weighted distribution
+func weighted_random_index(weights: Array) -> int:
+	var total := 0.0
+	for w in weights:
+		total += w
+
+	var r := randf() * total
+	var cumulative := 0.0
+
+	for i in range(weights.size()):
+		cumulative += weights[i]
+		if r < cumulative:
+			return i
+
+	return weights.size() - 1  
 	

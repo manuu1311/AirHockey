@@ -313,7 +313,6 @@ func _extract_action_dict(action_array: Array, action_space: Dictionary, action_
 ## For AIControllers that inherit mode from sync, sets the correct mode.
 func _set_agent_mode(agent: Node):
 	var agent_inherits_mode: bool = agent.control_mode == agent.ControlModes.INHERIT_FROM_SYNC
-
 	if agent_inherits_mode:
 		match control_mode:
 			ControlModes.HUMAN:

@@ -2,9 +2,10 @@
 
 [ext_resource type="Texture2D" uid="uid://um563vhlb7d4" path="res://Assets/Sprites/table.png" id="1_1sqqh"]
 [ext_resource type="Script" uid="uid://bjlkcit3bpuwx" path="res://Scripts/table.gd" id="2_mdr45"]
+[ext_resource type="Texture2D" uid="uid://d1ntdjscfgyax" path="res://Assets/Sprites/table_goal.png" id="3_l5bjd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1sqqh"]
-size = Vector2(100, 370.45)
+size = Vector2(100, 130)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_l5bjd"]
 size = Vector2(900, 100)
@@ -13,11 +14,11 @@ size = Vector2(900, 100)
 size = Vector2(900, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_abhex"]
-size = Vector2(100, 370)
+size = Vector2(100, 110.53)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_0x6sf"]
-a = Vector2(0, -181.115)
-b = Vector2(0, 186.95)
+a = Vector2(-0.49501038, -185)
+b = Vector2(-0.49497986, 182)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0x6sf"]
 size = Vector2(20, 37.909813)
@@ -46,7 +47,11 @@ script = ExtResource("2_mdr45")
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/NorthWall" unique_id=1050267165]
-position = Vector2(-396, 1.730971e-05)
+position = Vector2(-396, 137.00002)
+shape = SubResource("RectangleShape2D_1sqqh")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Walls/NorthWall" unique_id=1098972650]
+position = Vector2(-396, -131.99998)
 shape = SubResource("RectangleShape2D_1sqqh")
 
 [node name="LeftWall" type="StaticBody2D" parent="Walls" unique_id=1262844076]
@@ -67,7 +72,11 @@ shape = SubResource("RectangleShape2D_mdr45")
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/SouthWall" unique_id=1813091321]
-position = Vector2(405, -1.57361e-06)
+position = Vector2(405, 128.99998)
+shape = SubResource("RectangleShape2D_abhex")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Walls/SouthWall" unique_id=334076918]
+position = Vector2(405, -128.00002)
 shape = SubResource("RectangleShape2D_abhex")
 
 [node name="MiddleWall" type="StaticBody2D" parent="Walls" unique_id=785445662]
@@ -76,6 +85,22 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/MiddleWall" unique_id=116865068]
 position = Vector2(4.495, 0)
+shape = SubResource("SegmentShape2D_0x6sf")
+
+[node name="SouthernBlock" type="StaticBody2D" parent="Walls" unique_id=249989992]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/SouthernBlock" unique_id=1318846847]
+position = Vector2(355, -1.532106e-05)
+shape = SubResource("SegmentShape2D_0x6sf")
+
+[node name="SouthernBlock2" type="StaticBody2D" parent="Walls" unique_id=409351471]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/SouthernBlock2" unique_id=477977118]
+position = Vector2(-347, 1.5364334e-05)
 shape = SubResource("SegmentShape2D_0x6sf")
 
 [node name="NEWall" type="StaticBody2D" parent="Walls" unique_id=528922759]
@@ -111,6 +136,17 @@ position = Vector2(352, -179.00002)
 rotation = -0.70162237
 shape = SubResource("RectangleShape2D_ubh0d")
 
+[node name="GoalSprite" type="Sprite2D" parent="." unique_id=2011747711]
+self_modulate = Color(0.4026189, 6.497651e-07, 1.4439226e-07, 1)
+z_index = 10
+position = Vector2(367, -1.6042079e-05)
+texture = ExtResource("3_l5bjd")
+
+[node name="GoalSprite2" type="Sprite2D" parent="." unique_id=1333880382]
+self_modulate = Color(0.4026189, 6.497651e-07, 1.4439226e-07, 1)
+position = Vector2(-359, 1.5692387e-05)
+texture = ExtResource("3_l5bjd")
+
 [node name="GoalLlines" type="Node2D" parent="." unique_id=2102056331]
 
 [node name="GoalLineSouth" type="Area2D" parent="GoalLlines" unique_id=750189930]
@@ -119,7 +155,7 @@ collision_layer = 8
 collision_mask = 4
 
 [node name="Trigger" type="CollisionShape2D" parent="GoalLlines/GoalLineSouth" unique_id=596989533]
-position = Vector2(-2.43, 0)
+position = Vector2(30.035, 0)
 shape = SubResource("SegmentShape2D_mdr45")
 debug_color = Color(0, 0.59781516, 0.71432704, 0.41960785)
 
@@ -129,5 +165,5 @@ collision_layer = 8
 collision_mask = 4
 
 [node name="Trigger" type="CollisionShape2D" parent="GoalLlines/GoalLineNorth" unique_id=2012191310]
-position = Vector2(2.38, 0)
+position = Vector2(-29.4, 0)
 shape = SubResource("SegmentShape2D_mdr45")
