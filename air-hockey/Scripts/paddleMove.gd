@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 @export var start_position: Vector2
 @export var player: int
-@export var ai: bool
+@export var ai_flag: bool
 @export var puck_path: NodePath
 @onready var puck=get_node(puck_path)
 @onready var collision_shape = $CollisionShape2D
@@ -32,7 +32,7 @@ var airl_speed:=400
 
 func _ready() -> void:
 		home_position=to_global(start_position)
-		if ai:
+		if ai_flag:
 			if GameState.difficulty == 0:
 				handle_ai = Callable(self, "handle_ai_easy")
 			elif GameState.difficulty == 1:
@@ -56,7 +56,7 @@ func reset():
 	position= start_position
 	last_target=position
 	velocity=Vector2(0,0)
-	if ai:
+	if ai_flag:
 		if airl!=null:
 			print('reward obtained by player ',player,': ',airl.reward)
 			airl.done=true
@@ -65,14 +65,14 @@ func reset():
 #move paddle
 func _physics_process(delta):
 	if GameState.game_state==GameState.GameStates.PLAYING or GameState.game_state==GameState.GameStates.ENDED:
-		if not ai:
+		if not ai_flag:
 			handle_player(delta)
 		else:
 			handle_ai.call(delta)
 		velocity = velocity.limit_length(maxspeed)
 		move_and_slide()
 		#if training ai: detect collisions for reward
-		if GameState.training and ai:
+		if GameState.training and ai_flag:
 			passive_reward(delta)
 			puck_position_rew(delta)
 
@@ -182,19 +182,20 @@ func handle_ai_hard(delta):
 		velocity = velocity.lerp(direction * temp_speed, 0.15)
 
 func handle_ai_rl(_delta):
-	velocity.x=airl.move.x*airl_speed
-	velocity.y=airl.move.y*airl_speed
+	var move=airl.get_action()
+	velocity.x=move.x*airl_speed
+	velocity.y=move.y*airl_speed
 	
 #periodically give reward to agent depending on puck position
 func puck_position_rew(delta:float):
 	var sign_r
 	if player==0:
-		if puck.position.x>0:
+		if puck.position.x>=0:
 			sign_r=-1
 		else:
 			sign_r=1
 	elif player==1:
-		if puck.position.x>0:
+		if puck.position.x>=0:
 			sign_r=1
 		else:
 			sign_r=-1

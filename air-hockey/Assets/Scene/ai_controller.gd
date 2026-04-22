@@ -15,7 +15,10 @@ var player: int
 @export var goal_reward: float= 1
 #passive reward weight for puck position
 @export var puck_position_weight: float=0.005
-@export var passive_weight: float=0.001
+@export var passive_weight: float=0.002
+@export var inference=true
+#make observation symmetric
+var x_mirrored: int
 
 
 func _ready():
@@ -23,32 +26,38 @@ func _ready():
 	max_puck_speed=puck.maxspeed
 	max_paddle_speed=paddle.maxspeed
 	player=paddle.player
-	print(paddle.position)
+	if player==0:
+		x_mirrored =  1.0
+	else: 
+		x_mirrored = -1.0
+	#print(paddle.position)
+	if inference: 
+		ModelInference.initialise()
 
 #-- Methods that need implementing using the "extend script" option in Godot --#
 func get_obs() -> Dictionary:
 	var obs = []
 
 	# normalised positions
-	obs.append(paddle.position.x / field_width)
+	obs.append(x_mirrored*paddle.position.x / field_width)
 	obs.append(paddle.position.y / field_height)
 
-	obs.append(puck.position.x / field_width)
+	obs.append(x_mirrored*puck.position.x / field_width)
 	obs.append(puck.position.y / field_height)
 
-	obs.append(opponent.position.x / field_width)
+	obs.append(x_mirrored*opponent.position.x / field_width)
 	obs.append(opponent.position.y / field_height)
 
 	# normalised velocities
 	obs.append(puck.linear_velocity.x / max_puck_speed)
 	obs.append(puck.linear_velocity.y / max_puck_speed)
 
-	obs.append(paddle.velocity.x / max_paddle_speed)
+	obs.append(x_mirrored*paddle.velocity.x / max_paddle_speed)
 	obs.append(paddle.velocity.y / max_paddle_speed)
 
 	# relative positions
 	var rel_puck = (puck.position - paddle.position)
-	obs.append(rel_puck.x / field_width)
+	obs.append(x_mirrored*rel_puck.x / field_width)
 	obs.append(rel_puck.y / field_height)
 
 	return {"obs": obs}
@@ -83,4 +92,12 @@ func puck_position_reward(sign_r:int,delta:float):
 func passive_reward(delta:float):
 	reward-=passive_weight*delta
 	
+#handle action computation
+func get_action():
+	if inference:
+		var obs=get_obs()
+		var modelOutput=ModelInference.forward(obs)
+		move.x=modelOutput[0]
+		move.y=modelOutput[1]
+	return move
 	

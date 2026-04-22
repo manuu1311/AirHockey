@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bv8kxd4i6j7kw"]
+
+[ext_resource type="Script" uid="uid://vykgb4wfixl3" path="res://Scripts/model_inference.gd" id="1_hkfx0"]
+
+[node name="ModelInference" type="Node" unique_id=588715386]
+script = ExtResource("1_hkfx0")

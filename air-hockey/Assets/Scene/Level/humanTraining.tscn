@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://bx4bwqydmvejb" path="res://Scripts/gameManager.gd" id="6_hr5g1"]
 [ext_resource type="Script" uid="uid://ce3j1n0kac1th" path="res://Scripts/game_state.gd" id="7_iu0u3"]
 [ext_resource type="Script" uid="uid://dwc001u0axl10" path="res://addons/godot_rl_agents/sync.gd" id="9_k6ksb"]
+[ext_resource type="PackedScene" uid="uid://bv8kxd4i6j7kw" path="res://Assets/Scene/modelInference.tscn" id="10_kxt7r"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_eiiri"]
 load_path = "res://.godot/imported/table.png-1c1366adec3c0bd92464a1fe6da1281c.ctex"
@@ -27,7 +28,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -36,23 +37,23 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="Table/PaddleN" unique_id=1602674295 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="Table/PaddleN" unique_id=1602674295 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_5ophu")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
 puck = NodePath("../../Puck")
-control_mode = 2
+control_mode = 3
+onnx_model_path = "D:\\misc\\Projects\\Godot\\AirHockey\\air-hockey\\Assets\\model.onnx"
 metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 
 [node name="PaddleS" parent="Table" unique_id=560494842 groups=["paddle"] instance=ExtResource("3_k6ksb")]
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="Table/PaddleS" unique_id=1490849882 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="Table/PaddleS" unique_id=1490849882 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_5ophu")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleN")
@@ -81,7 +82,10 @@ training = true
 
 [node name="Sync" type="Node" parent="." unique_id=1411434262]
 script = ExtResource("9_k6ksb")
-speed_up = 8.0
+control_mode = 2
+onnx_model_path = "D:\\misc\\Projects\\Godot\\AirHockey\\air-hockey\\Assets\\model.onnx"
 metadata/_custom_type_script = "uid://dwc001u0axl10"
+
+[node name="ModelInference" parent="." unique_id=588715386 instance=ExtResource("10_kxt7r")]
 
 [editable path="Table/Puck"]

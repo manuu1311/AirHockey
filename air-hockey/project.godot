@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="AirHockey"
-run/main_scene="uid://c5ke2yt65q3hg"
+run/main_scene="uid://buk5w0winnywt"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 run/max_fps=60
 config/icon="res://icon.svg"
@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameState="*uid://ce3j1n0kac1th"
+ModelInference="*uid://vykgb4wfixl3"
 
 [display]
 
