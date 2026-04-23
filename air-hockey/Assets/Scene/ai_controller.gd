@@ -14,8 +14,8 @@ var player: int
 #reward for goal
 @export var goal_reward: float= 1
 #passive reward weight for puck position
-@export var puck_position_weight: float=0.005
-@export var passive_weight: float=0.002
+@export var puck_position_weight: float=0.05
+@export var passive_weight: float=0.02
 @export var inference=true
 #make observation symmetric
 var x_mirrored: int
@@ -27,9 +27,9 @@ func _ready():
 	max_paddle_speed=paddle.maxspeed
 	player=paddle.player
 	if player==0:
-		x_mirrored =  1.0
+		x_mirrored =  1
 	else: 
-		x_mirrored = -1.0
+		x_mirrored = -1
 	#print(paddle.position)
 	if inference: 
 		ModelInference.initialise()

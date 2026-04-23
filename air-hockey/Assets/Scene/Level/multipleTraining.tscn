@@ -29,7 +29,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -38,7 +38,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene2/Table/PaddleN" unique_id=185993213 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene2/Table/PaddleN" unique_id=185993213 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -50,9 +50,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene2/Table/PaddleS" unique_id=780252983 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -95,7 +96,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -104,7 +105,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene/Table/PaddleN" unique_id=1602674295 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene/Table/PaddleN" unique_id=1602674295 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -116,9 +117,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene/Table/PaddleS" unique_id=1490849882 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -161,7 +163,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -170,7 +172,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene3/Table/PaddleN" unique_id=201116930 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene3/Table/PaddleN" unique_id=201116930 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -182,9 +184,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene3/Table/PaddleS" unique_id=1213665085 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -227,7 +230,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -236,7 +239,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene4/Table/PaddleN" unique_id=385110173 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene4/Table/PaddleN" unique_id=385110173 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -248,9 +251,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene4/Table/PaddleS" unique_id=1776580931 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -293,7 +297,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -302,7 +306,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene5/Table/PaddleN" unique_id=348780317 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene5/Table/PaddleN" unique_id=348780317 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -314,9 +318,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene5/Table/PaddleS" unique_id=421107504 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -359,7 +364,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -368,7 +373,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene6/Table/PaddleN" unique_id=460620217 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene6/Table/PaddleN" unique_id=460620217 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -380,9 +385,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene6/Table/PaddleS" unique_id=1988210326 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -425,7 +431,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -434,7 +440,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene7/Table/PaddleN" unique_id=1906937626 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene7/Table/PaddleN" unique_id=1906937626 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -446,9 +452,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene7/Table/PaddleS" unique_id=1491572625 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -491,7 +498,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -500,7 +507,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene8/Table/PaddleN" unique_id=214013489 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene8/Table/PaddleN" unique_id=214013489 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -512,9 +519,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene8/Table/PaddleS" unique_id=1511934357 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -557,7 +565,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -566,7 +574,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene9/Table/PaddleN" unique_id=1521234065 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene9/Table/PaddleN" unique_id=1521234065 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -578,9 +586,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene9/Table/PaddleS" unique_id=362674111 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -623,7 +632,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -632,7 +641,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene10/Table/PaddleN" unique_id=454771748 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene10/Table/PaddleN" unique_id=454771748 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -644,9 +653,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene10/Table/PaddleS" unique_id=1417743865 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -689,7 +699,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -698,7 +708,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene11/Table/PaddleN" unique_id=347213316 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene11/Table/PaddleN" unique_id=347213316 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -710,9 +720,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene11/Table/PaddleS" unique_id=1917283323 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -755,7 +766,7 @@ position = Vector2(-226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(-226, 0)
 player = 1
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
@@ -764,7 +775,7 @@ global_goal_line = 90.0
 goal_width = Vector2(330, 470)
 airl_path = NodePath("AIController2D")
 
-[node name="AIController2D" type="Node2D" parent="MainScene12/Table/PaddleN" unique_id=482366302 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
+[node name="AIController2D" type="Node2D" parent="MainScene12/Table/PaddleN" unique_id=482366302 node_paths=PackedStringArray("paddle", "opponent", "puck")]
 script = ExtResource("4_p74ml")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
@@ -776,9 +787,10 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-ai = true
+ai_flag = true
 puck_path = NodePath("../Puck")
 airl_path = NodePath("AIController2D")
+ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="MainScene12/Table/PaddleS" unique_id=11621744 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_p74ml")
@@ -808,12 +820,12 @@ script = ExtResource("8_ksb47")
 training = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=501292274]
-position = Vector2(1798, -821)
-zoom = Vector2(0.25, 0.25)
+position = Vector2(1770, -723)
+zoom = Vector2(0.23, 0.23)
 
 [node name="Sync" type="Node" parent="." unique_id=264584727]
 script = ExtResource("9_lcfdc")
-speed_up = 8.0
+speed_up = 6.0
 metadata/_custom_type_script = "uid://dwc001u0axl10"
 
 [editable path="MainScene2/Table/Puck"]

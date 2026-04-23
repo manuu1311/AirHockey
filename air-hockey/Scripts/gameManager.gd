@@ -20,8 +20,9 @@ var playerScores: Array=[0,0]
 @export var training: bool
 
 #reset timer variables 
-var reset_delay := 20.0
+var reset_delay := 60.0
 var reset_timer_id := 0
+
 
 func _ready():
 	puck = get_node(puck_path)
@@ -44,13 +45,13 @@ func onResetButton():
 	ResetBoard()
 	
 #reset the whole board before each point
-func ResetBoard():
+func ResetBoard(timeout=false):
 	if GameState.training==true:
 		print('Resetting board')
 		reset_timer_id += 1  
 	start_reset_timer()  
 	GameState.game_state=GameState.GameStates.COUNTDOWN
-	ResetPaddles()
+	ResetPaddles(timeout)
 	puck.reset()
 	if GameState.training==false:
 		ui.startCountdown()
@@ -62,9 +63,9 @@ func ResetBoard():
 			paddle.unlocked=true
 	
 #reset paddles to their starting positions
-func ResetPaddles():
-	northPaddle.reset()
-	southPaddle.reset()
+func ResetPaddles(timeout:bool):
+	northPaddle.reset(timeout)
+	southPaddle.reset(timeout)
 	
 #increase score for the given player (int 1, -1)
 func IncreaseScore(player: int):
@@ -99,4 +100,4 @@ func start_reset_timer():
 
 	# only trigger if this is still the latest timer
 	if my_id == reset_timer_id:
-		ResetBoard()
+		ResetBoard(true)

@@ -35,6 +35,10 @@ project/assembly_name="AirHockey"
 
 enabled=PackedStringArray("res://addons/godot_rl_agents/plugin.cfg")
 
+[global_group]
+
+AGENT=""
+
 [layer_names]
 
 2d_physics/layer_1="Walls"

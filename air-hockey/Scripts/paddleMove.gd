@@ -42,27 +42,28 @@ func _ready() -> void:
 		#adjust parameters
 		speed=600
 		reaction_time=0.1
-	elif GameState.difficulty==3:
+	if GameState.difficulty==3 or ai_training:
 		print('handle rl!')
 		handle_ai = Callable(self, "handle_ai_rl")
 		airl=get_node(airl_path)
 		
-func reset():
+func reset(timeout=false):
 	unlocked=false
 	position= start_position
-	last_target=position
+	last_target=position	
 	velocity=Vector2(0,0)
 	if ai_flag:
 		if airl!=null:
+			if timeout:
+				airl.goal_scored(2)
 			print('reward obtained by player ',player,': ',airl.reward)
 			airl.done=true
 		else:
 			print('couldnt find airl: no reward!')
 	if ai_flag and not ai_training:
 		#if training, randomise difficulties
-		print(GameState.training)
 		if GameState.training==true:
-			var weights=[0.6,0.3,0.1,0.0]
+			var weights=[0,3.5,0.2,0.0]
 			GameState.difficulty =weighted_random_index(weights)
 			print('Difficulty changed to ',GameState.difficulty)
 		if GameState.difficulty == 0:
@@ -87,7 +88,7 @@ func _physics_process(delta):
 		velocity = velocity.limit_length(maxspeed)
 		move_and_slide()
 		#if training ai: detect collisions for reward
-		if GameState.training and ai_flag and GameState.difficulty==3:
+		if GameState.training and ai_flag and ai_training:
 			passive_reward(delta)
 			puck_position_rew(delta)
 

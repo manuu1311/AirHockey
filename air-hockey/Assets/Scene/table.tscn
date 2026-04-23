@@ -154,18 +154,19 @@ rotation = 3.1415927
 texture = ExtResource("3_l5bjd")
 
 [node name="GoalSprite2" type="Sprite2D" parent="." unique_id=1333880382]
+z_index = 10
 position = Vector2(-359, 1.5692387e-05)
 texture = ExtResource("3_l5bjd")
 
 [node name="GoalLlines" type="Node2D" parent="." unique_id=2102056331]
 
 [node name="GoalLineSouth" type="Area2D" parent="GoalLlines" unique_id=750189930]
-position = Vector2(353, 69.999985)
+position = Vector2(347.82, 70)
 collision_layer = 8
 collision_mask = 4
 
 [node name="Trigger" type="CollisionShape2D" parent="GoalLlines/GoalLineSouth" unique_id=596989533]
-position = Vector2(30.035, 0)
+position = Vector2(25.43, 0)
 shape = SubResource("SegmentShape2D_mdr45")
 debug_color = Color(0, 0.59781516, 0.71432704, 0.41960785)
 
@@ -175,5 +176,5 @@ collision_layer = 8
 collision_mask = 4
 
 [node name="Trigger" type="CollisionShape2D" parent="GoalLlines/GoalLineNorth" unique_id=2012191310]
-position = Vector2(-29.4, 0)
+position = Vector2(-19.54, 0)
 shape = SubResource("SegmentShape2D_mdr45")

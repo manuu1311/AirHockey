@@ -1,12 +1,34 @@
 extends Node
 
-@export var model_path: String='res://Assets/weights.json'
+@export var model_paths: String='res://Assets/'
 var params
+var paths: Array=['model.json','model150.json','model500.json','model600.json']
+var weights=[0.1,0.2,0.3,0.4]
 
 #load json weights
 func initialise():
-	var file = FileAccess.open(model_path, FileAccess.READ)
+	print('TODO:change')
+	weights=[0,0,0,1]
+	var id=weighted_random_index(weights)
+	print('inference using model ',id)
+	var file = FileAccess.open(model_paths+paths[id], FileAccess.READ)
 	params = JSON.parse_string(file.get_as_text())
+	
+#random distribution function
+func weighted_random_index(weights_dist: Array) -> int:
+	var total := 0.0
+	for w in weights_dist:
+		total += w
+
+	var r := randf() * total
+	var cumulative := 0.0
+
+	for i in range(weights_dist.size()):
+		cumulative += weights_dist[i]
+		if r < cumulative:
+			return i
+
+	return weights_dist.size() - 1  
 #define basic mlp functions
 func matvec(W, x):
 	var out = []
@@ -53,5 +75,7 @@ func forward(obs):
 	# Output: 64 -> 2
 	var z3 = matvec(W2, a2)
 	z3 = add_bias(z3, b2)
-
-	return z3
+	var action = []
+	for x in z3:
+		action.append(clamp(x, -1.0, 1.0))
+	return action
