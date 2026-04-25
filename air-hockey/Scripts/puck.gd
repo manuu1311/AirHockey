@@ -2,6 +2,9 @@ extends RigidBody2D
 
 var startingPos: Vector2
 var should_reset=false
+var should_apply_vel=false
+var player_apply_vel=0
+@export var initial_vel:int=75
 
 var maxspeed=2000
 
@@ -13,6 +16,10 @@ func reset():
 	show()
 	set_deferred("freeze", false)
 	sleeping = false
+#apply initial velocity
+func apply_initial_force(player:int):
+	should_apply_vel=true
+	player_apply_vel=player
 #hide the puck after goal scored
 func disappear():
 	sleeping = true
@@ -21,7 +28,7 @@ func disappear():
 	hide()
 	set_deferred("freeze", true)
 	
-func _integrate_forces(state):
+func _integrate_forces(state):	
 	if should_reset:
 		state.linear_velocity = Vector2.ZERO
 		state.angular_velocity = 0
@@ -33,4 +40,8 @@ func _integrate_forces(state):
 func _physics_process(_delta):
 	if linear_velocity.length() > maxspeed:
 		linear_velocity = linear_velocity.limit_length(maxspeed)
+
+	if should_apply_vel:
+		linear_velocity = Vector2(0,player_apply_vel*initial_vel)
+		should_apply_vel=false
 		

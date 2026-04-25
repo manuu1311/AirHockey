@@ -16,9 +16,13 @@ size = Vector2(900, 100)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_abhex"]
 size = Vector2(100, 110.53)
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_0x6sf"]
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_l5bjd"]
 a = Vector2(-0.49501038, -185)
-b = Vector2(-0.49497986, 182)
+b = Vector2(-0.495, 187.115)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_0x6sf"]
+a = Vector2(-0.495, -185.11)
+b = Vector2(-0.495, 187.475)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0x6sf"]
 size = Vector2(20, 37.909813)
@@ -83,14 +87,18 @@ shape = SubResource("RectangleShape2D_abhex")
 position = Vector2(405, -128.00002)
 shape = SubResource("RectangleShape2D_abhex")
 
-[node name="MiddleWall" type="StaticBody2D" parent="Walls" unique_id=785445662]
-visible = false
+[node name="MiddleWalls" type="StaticBody2D" parent="Walls" unique_id=785445662]
 collision_layer = 16
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/MiddleWall" unique_id=116865068]
-position = Vector2(4.495, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/MiddleWalls" unique_id=116865068]
+position = Vector2(-15.835, 0)
+shape = SubResource("SegmentShape2D_l5bjd")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Walls/MiddleWalls" unique_id=2075193821]
+position = Vector2(25.315, 0)
 shape = SubResource("SegmentShape2D_0x6sf")
+debug_color = Color(0, 0.6, 0.69803923, 0.7882353)
 
 [node name="SouthernBlock" type="StaticBody2D" parent="Walls" unique_id=249989992]
 visible = false

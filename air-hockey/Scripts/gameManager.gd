@@ -15,6 +15,7 @@ var goalSignal
 var ui
 var table
 var playerScores: Array=[0,0]
+var playerPuckVel: int
 
 @export var winScore: int=5
 @export var training: bool
@@ -22,6 +23,7 @@ var playerScores: Array=[0,0]
 #reset timer variables 
 var reset_delay := 60.0
 var reset_timer_id := 0
+
 
 
 func _ready():
@@ -35,6 +37,7 @@ func _ready():
 	GameState.training=training
 	print('training: ',GameState.training)
 	print('difficulty: ',GameState.difficulty)
+	playerPuckVel=1
 	ResetBoard()
 
 #routine after reset button is clicked
@@ -61,6 +64,7 @@ func ResetBoard(timeout=false):
 	for paddle in [northPaddle,southPaddle]:
 		if paddle.ai_flag==true:
 			paddle.unlocked=true
+	puck.apply_initial_force(playerPuckVel)
 	
 #reset paddles to their starting positions
 func ResetPaddles(timeout:bool):
@@ -75,6 +79,7 @@ func IncreaseScore(player: int):
 	
 #function called on signal emitted from goal lines
 func GoalScored(player:int):
+	playerPuckVel = 1 if player == 1 else -1
 	if GameState.game_state==GameState.GameStates.PLAYING:
 		IncreaseScore(player)
 		puck.disappear()
