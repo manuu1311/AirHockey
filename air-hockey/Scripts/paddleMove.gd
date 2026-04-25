@@ -55,7 +55,7 @@ func reset(timeout=false):
 	if ai_flag:
 		if airl!=null:
 			if timeout:
-				airl.goal_scored(2)
+				airl.goal_scored(2,0.5)
 			print('reward obtained by player ',player,': ',airl.reward)
 			airl.done=true
 		else:
@@ -63,7 +63,7 @@ func reset(timeout=false):
 	if ai_flag and not ai_training:
 		#if training, randomise difficulties
 		if GameState.training==true:
-			var weights=[0,3.5,0.2,0.0]
+			var weights=[0.3,0.3,0.3,0.0,1]
 			GameState.difficulty =weighted_random_index(weights)
 			print('Difficulty changed to ',GameState.difficulty)
 		if GameState.difficulty == 0:
@@ -78,6 +78,8 @@ func reset(timeout=false):
 		elif GameState.difficulty==3 or ai_training:
 			handle_ai = Callable(self, "handle_ai_rl")
 			airl=get_node(airl_path)
+		elif GameState.difficulty==4:
+			handle_ai=Callable(self,"handle_ai_dummy")
 #move paddle
 func _physics_process(delta):
 	if GameState.game_state==GameState.GameStates.PLAYING or GameState.game_state==GameState.GameStates.ENDED:
@@ -91,6 +93,7 @@ func _physics_process(delta):
 		if GameState.training and ai_flag and ai_training:
 			passive_reward(delta)
 			puck_position_rew(delta)
+			puck_velocity_rew(delta)
 
 			
 #player input handler
@@ -200,7 +203,7 @@ func handle_ai_hard(delta):
 func handle_ai_rl(_delta):
 	var move=airl.get_action()
 	velocity.x=move.x*airl_speed
-	velocity.y=move.y*airl_speed
+	velocity.y=move.y*airl_speed*airl.x_mirrored
 	
 #periodically give reward to agent depending on puck position
 func puck_position_rew(delta:float):
@@ -221,6 +224,9 @@ func puck_position_rew(delta:float):
 func passive_reward(delta: float):
 	airl.passive_reward(delta)
 
+func puck_velocity_rew(delta: float):
+	airl.puck_velocity_reward(delta)
+
 #random weighted distribution
 func weighted_random_index(weights: Array) -> int:
 	var total := 0.0
@@ -237,3 +243,7 @@ func weighted_random_index(weights: Array) -> int:
 
 	return weights.size() - 1  
 	
+	
+func handle_ai_dummy(_delta):
+	velocity = Vector2(300,300)
+		

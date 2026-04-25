@@ -15,8 +15,10 @@ var player: int
 @export var goal_reward: float= 1
 #passive reward weight for puck position
 @export var puck_position_weight: float=0.05
+@export var puck_velocity_weight: float=0.05
 @export var passive_weight: float=0.02
 @export var inference=true
+
 #make observation symmetric
 var x_mirrored: int
 
@@ -30,7 +32,11 @@ func _ready():
 		x_mirrored =  1
 	else: 
 		x_mirrored = -1
-	#print(paddle.position)
+	#divide reward weight by max puck speed
+	puck_velocity_weight/=max_puck_speed
+	#halve length and height to normalise between -1 and 1
+	field_height/=2
+	field_width/=2
 	if inference: 
 		ModelInference.initialise()
 
@@ -49,17 +55,17 @@ func get_obs() -> Dictionary:
 	obs.append(opponent.position.y / field_height)
 
 	# normalised velocities
+	#flip x and y!! velocity is in world space
+	obs.append(x_mirrored*puck.linear_velocity.y / max_puck_speed)
 	obs.append(puck.linear_velocity.x / max_puck_speed)
-	obs.append(puck.linear_velocity.y / max_puck_speed)
-
-	obs.append(x_mirrored*paddle.velocity.x / max_paddle_speed)
-	obs.append(paddle.velocity.y / max_paddle_speed)
+	#flip x and y!! velocity is in world space
+	obs.append(x_mirrored*paddle.velocity.y / max_paddle_speed)
+	obs.append(paddle.velocity.x / max_paddle_speed)
 
 	# relative positions
 	var rel_puck = (puck.position - paddle.position)
 	obs.append(x_mirrored*rel_puck.x / field_width)
 	obs.append(rel_puck.y / field_height)
-
 	return {"obs": obs}
 
 
@@ -79,15 +85,18 @@ func set_action(action) -> void:
 	
 
 #goal scored signal
-func goal_scored(playerToScore: int):
+func goal_scored(playerToScore: int,scale_rew: float=1):
 	if player==playerToScore:
-		reward+=goal_reward
+		reward+=goal_reward*scale_rew
 	else:
-		reward-=goal_reward
+		reward-=goal_reward*scale_rew
 
 #passive reward for puck position (own side or opponent side)
 func puck_position_reward(sign_r:int,delta:float):
 	reward+=sign_r*puck_position_weight*delta
+
+func puck_velocity_reward(delta:float):
+	reward -= x_mirrored * puck.linear_velocity.y*puck_velocity_weight*delta
 
 func passive_reward(delta:float):
 	reward-=passive_weight*delta
