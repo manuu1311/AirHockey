@@ -18,8 +18,10 @@ func reset():
 	sleeping = false
 #apply initial velocity
 func apply_initial_force(player:int):
-	should_apply_vel=true
-	player_apply_vel=player
+	call_deferred("_apply_force_deferred", player)
+func _apply_force_deferred(player: int) -> void:
+	should_apply_vel = true
+	player_apply_vel = player
 #hide the puck after goal scored
 func disappear():
 	sleeping = true
@@ -36,12 +38,14 @@ func _integrate_forces(state):
 		show()
 		set_deferred("process_mode", Node.PROCESS_MODE_INHERIT)
 		should_reset = false
-	
-func _physics_process(_delta):
+		
 	if linear_velocity.length() > maxspeed:
 		linear_velocity = linear_velocity.limit_length(maxspeed)
-
+		
 	if should_apply_vel:
 		linear_velocity = Vector2(0,player_apply_vel*initial_vel)
 		should_apply_vel=false
+	
+func _physics_process(_delta):
+	pass
 		
