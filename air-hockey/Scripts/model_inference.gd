@@ -2,17 +2,29 @@ extends Node
 
 @export var model_paths: String='res://Assets/'
 var params
-var paths: Array=['model.json','model150.json','model500.json','model600.json']
-var weights=[0.1,0.2,0.3,0.4]
+#var paths: Array=['model.json','model150.json','model500.json','model600.json']
+#var weights=[0.1,0.2,0.3,0.4]
+var paths: Array=['model_third_it_3m.json','model_third_it_7m.json',
+				   'model500.json','model_third_it_v3.json',
+					'model_third_it_5m.json']
+var models: Array
+var weights=[3,50000,1,3,5]
 
+func _ready() -> void:
+	for path in paths:
+		var file = FileAccess.open(model_paths + path, FileAccess.READ)
+		if file:
+			var data = JSON.parse_string(file.get_as_text())
+			if data != null:
+				models.append(data)
+			else:
+				print("JSON parse error for: ", path)
+		else:
+			print("Failed to open file: ", path)
 #load json weights
 func initialise():
-	print('TODO:change')
-	weights=[0,0,0,1]
 	var id=weighted_random_index(weights)
-	print('inference using model ',id)
-	var file = FileAccess.open(model_paths+paths[id], FileAccess.READ)
-	params = JSON.parse_string(file.get_as_text())
+	params = models[id]
 	
 #random distribution function
 func weighted_random_index(weights_dist: Array) -> int:

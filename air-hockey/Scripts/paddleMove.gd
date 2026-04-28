@@ -6,6 +6,7 @@ extends CharacterBody2D
 @export var puck_path: NodePath
 @onready var puck=get_node(puck_path)
 @onready var collision_shape = $CollisionShape2D
+@export var difficulty: int = -1
 #variable to lock the paddle movement in point start
 var unlocked=false
 var maxspeed=7000
@@ -21,6 +22,7 @@ var handle_ai: Callable
 @export var global_goal_line:= 870.0
 @export var goal_width: Vector2
 @export var debug:=false
+var direction := 1
 #how fast a shot for it to be dangerous
 var delta_dangerous:=0.5
 #how slow the puck to be considered safe to attack
@@ -32,17 +34,32 @@ var airl_speed:=400
 
 
 func _ready() -> void:
+	if difficulty==-1:
+		difficulty=GameState.difficulty
 	home_position=to_global(start_position)
-	if GameState.difficulty == 0:
+	if difficulty == 0:
 		handle_ai = Callable(self, "handle_ai_easy")
-	elif GameState.difficulty == 1:
+	elif difficulty == 1:
 		handle_ai = Callable(self, "handle_ai_normal")
-	elif GameState.difficulty==2:
+	elif difficulty==2:
 		handle_ai = Callable(self, "handle_ai_hard")
 		#adjust parameters
 		speed=600
 		reaction_time=0.1
-	if GameState.difficulty==3 or ai_training:
+	elif difficulty==4:
+		#random dummy movements
+		var weights=[0.5,1,1]
+		var id =weighted_random_index(weights)
+		if id==0:
+			handle_ai = Callable(self, "handle_ai_dummy")
+		elif id==1:
+			handle_ai = Callable(self, "handle_ai_stupid")
+			#make it hover in the middle
+			timer=0.15
+		elif id==2:
+			handle_ai = Callable(self, "handle_ai_still")
+			
+	if difficulty==3 or ai_training:
 		print('handle rl!')
 		handle_ai = Callable(self, "handle_ai_rl")
 		airl=get_node(airl_path)
@@ -52,10 +69,18 @@ func reset(timeout=false):
 	position= start_position
 	last_target=position	
 	velocity=Vector2(0,0)
+	if ai_training:
+		print('reward obtained by player ',player,': ',airl.reward)
+		airl.done=true
+		if timeout:
+			airl.goal_scored(2,0.5)
+	if airl!=null:
+		airl.reset()
+	'''
 	if ai_flag:
 		if airl!=null:
 			if timeout:
-				airl.goal_scored(2,0.5)
+				airl.goal_scored(2,1.5)
 			print('reward obtained by player ',player,': ',airl.reward)
 			airl.done=true
 		else:
@@ -80,6 +105,7 @@ func reset(timeout=false):
 			airl=get_node(airl_path)
 		elif GameState.difficulty==4:
 			handle_ai=Callable(self,"handle_ai_dummy")
+			'''
 #move paddle
 func _physics_process(delta):
 	if GameState.game_state==GameState.GameStates.PLAYING or GameState.game_state==GameState.GameStates.ENDED:
@@ -94,6 +120,8 @@ func _physics_process(delta):
 			passive_reward(delta)
 			puck_position_rew(delta)
 			puck_velocity_rew(delta)
+			#middle_reward(delta)
+			puck_distance_reward(delta)
 
 			
 #player input handler
@@ -141,6 +169,7 @@ func handle_ai_normal(delta):
 		var direction = (last_target - global_position).normalized()
 		velocity = velocity.lerp(direction * speed, 0.1)
 		
+		
 func handle_ai_hard(delta):
 	if unlocked:
 		timer += delta
@@ -178,7 +207,7 @@ func handle_ai_hard(delta):
 			#if puck is in own field AND behind own paddle AND
 			#is not going towards the opponent field "too fast" 
 			#															add offset for zero division
-			elif puck_pos.y<middle_line and puck_pos.y>position.y and abs(puck_vel.y) < attack_threshold:
+			elif puck_pos.y<middle_line-50 and puck_pos.y>position.y and abs(puck_vel.y) < attack_threshold:
 				# ATTACK
 				if debug:
 					print('attacking!')
@@ -200,6 +229,8 @@ func handle_ai_hard(delta):
 		var direction = (last_target - global_position).normalized()
 		velocity = velocity.lerp(direction * temp_speed, 0.15)
 
+	
+			
 func handle_ai_rl(_delta):
 	var move=airl.get_action()
 	velocity.x=move.x*airl_speed
@@ -207,26 +238,37 @@ func handle_ai_rl(_delta):
 	
 #periodically give reward to agent depending on puck position
 func puck_position_rew(delta:float):
+	'''
 	var sign_r
+	var check=false
 	if player==0:
-		if puck.position.x>=0:
+		if puck.position.x>0.2:
 			sign_r=-1
-		else:
+			check=true
+		elif puck.position.x<-0.2:
 			sign_r=1
+			check=true
 	elif player==1:
-		if puck.position.x>=0:
+		if puck.position.x>0.2:
 			sign_r=1
-		else:
+			check=true
+		elif puck.position.x<-0.2:
 			sign_r=-1
-	airl.puck_position_reward(sign_r, delta)
-			
+			check=true
+	if check:
+		airl.puck_position_reward(sign_r, delta)
+		'''
+	airl.puck_position_reward(delta)	
 #passive negative reward to promote shorter points
 func passive_reward(delta: float):
 	airl.passive_reward(delta)
 
 func puck_velocity_rew(delta: float):
 	airl.puck_velocity_reward(delta)
-
+func middle_reward(delta: float):
+	airl.middle_reward(delta)
+func puck_distance_reward(delta):
+	airl.puck_distance_reward(delta)
 #random weighted distribution
 func weighted_random_index(weights: Array) -> int:
 	var total := 0.0
@@ -246,4 +288,16 @@ func weighted_random_index(weights: Array) -> int:
 	
 func handle_ai_dummy(_delta):
 	velocity = Vector2(300,300)
+
+func handle_ai_stupid(delta):
+	timer += delta
+	
+	if timer >= 0.3:
+		timer = 0
+		direction *= -1  # flip between 1 and -1
+	
+	velocity.x = direction * 200
+	#velocity.y=direction*75
 		
+func handle_ai_still(_delta):
+	return

@@ -3,7 +3,7 @@ import os
 import pathlib
 from typing import Callable
 
-from stable_baselines3 import PPO
+from stable_baselines3 import SAC
 from stable_baselines3.common.callbacks import CheckpointCallback
 from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
 
@@ -121,8 +121,10 @@ def handle_onnx_export():
 def handle_model_save():
     if args.save_model_path is not None:
         zip_save_path = pathlib.Path(args.save_model_path).with_suffix(".zip")
+        buffer_save_path = pathlib.Path(args.save_model_path+'_buffer').with_suffix(".pkl")
         print("Saving model to: " + os.path.abspath(zip_save_path))
         model.save(zip_save_path)
+        model.save_replay_buffer(buffer_save_path)
 
 
 def close_env():
@@ -185,22 +187,30 @@ def linear_schedule(initial_value: float) -> Callable[[float], float]:
 
     return func
 
-
+policy_kwargs = dict(net_arch=dict(pi=[128, 128, 128], qf=[128, 128, 128]))
 if args.resume_model_path is None:
-    learning_rate = 0.0003 if not args.linear_lr_schedule else linear_schedule(0.0003)
-    model: PPO = PPO(
+    model = SAC(
         "MultiInputPolicy",
         env,
-        ent_coef=0.0001,
         verbose=2,
-        n_steps=32,
+        learning_rate=3e-4,
+        buffer_size=1000000,
+        learning_starts=10000,
+        batch_size=256,
+        ent_coef='auto',
+        tau=0.005,
+        gamma=0.99,
+        train_freq=1,
+        gradient_steps=1,
+        policy_kwargs=policy_kwargs,
         tensorboard_log=args.experiment_dir,
-        learning_rate=learning_rate,
     )
 else:
     path_zip = pathlib.Path(args.resume_model_path)
+    path_buffer=pathlib.Path(args.resume_model_path+'_buffer')
     print("Loading model: " + os.path.abspath(path_zip))
-    model = PPO.load(path_zip, env=env, tensorboard_log=args.experiment_dir)
+    model = SAC.load(path_zip, env=env, tensorboard_log=args.experiment_dir)
+    model.load_replay_buffer(path_buffer)
 
 if args.inference:
     obs = env.reset()

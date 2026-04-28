@@ -52,6 +52,8 @@ func ResetBoard(timeout=false):
 	if GameState.training==true:
 		print('Resetting board')
 		reset_timer_id += 1  
+		#give puck to the ai
+		playerPuckVel=-1
 	start_reset_timer()  
 	GameState.game_state=GameState.GameStates.COUNTDOWN
 	ResetPaddles(timeout)

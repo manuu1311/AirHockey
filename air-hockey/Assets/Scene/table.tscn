@@ -92,11 +92,11 @@ collision_layer = 16
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/MiddleWalls" unique_id=116865068]
-position = Vector2(-15.835, 0)
+position = Vector2(-4.84, 0)
 shape = SubResource("SegmentShape2D_l5bjd")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Walls/MiddleWalls" unique_id=2075193821]
-position = Vector2(25.315, 0)
+position = Vector2(14.865, 0)
 shape = SubResource("SegmentShape2D_0x6sf")
 debug_color = Color(0, 0.6, 0.69803923, 0.7882353)
 
