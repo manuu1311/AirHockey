@@ -18,15 +18,17 @@ var last_target : Vector2
 @export var speed := 600.0
 var home_position
 var handle_ai: Callable
-@export var middle_line: float
-@export var global_goal_line:= 870.0
-@export var goal_width: Vector2
+var middle_line: float
+var global_goal_line:float
+var alt_goal_width
 @export var debug:=false
 var direction := 1
 #how fast a shot for it to be dangerous
 var delta_dangerous:=0.5
 #how slow the puck to be considered safe to attack
 var attack_threshold:=500
+
+#rl agent
 @export var airl_path: NodePath 
 var airl: Node2D
 var airl_speed:=400
@@ -34,9 +36,13 @@ var airl_speed:=400
 
 
 func _ready() -> void:
+	home_position=to_global(start_position)
+	print('player: ',player)
+	global_goal_line=home_position.y-100
+	middle_line=home_position.y+284
+	alt_goal_width=80
 	if difficulty==-1:
 		difficulty=GameState.difficulty
-	home_position=to_global(start_position)
 	if difficulty == 0:
 		handle_ai = Callable(self, "handle_ai_easy")
 	elif difficulty == 1:
@@ -63,6 +69,34 @@ func _ready() -> void:
 		print('handle rl!')
 		handle_ai = Callable(self, "handle_ai_rl")
 		airl=get_node(airl_path)
+		airl.init(self)
+	
+func new_difficulty():
+	print('changing difficulty..')
+	var weights=[0,0,0,1]
+	difficulty =weighted_random_index(weights)
+	print('difficulty changed to: ',difficulty)
+	if difficulty == 0:
+		handle_ai = Callable(self, "handle_ai_easy")
+	elif difficulty == 1:
+		handle_ai = Callable(self, "handle_ai_normal")
+	elif difficulty==2:
+		handle_ai = Callable(self, "handle_ai_hard")
+		#adjust parameters
+		speed=600
+		reaction_time=0.1
+	elif difficulty==3:
+		#random dummy movements
+		weights=[1,1,1]
+		var id =weighted_random_index(weights)
+		if id==0:
+			handle_ai = Callable(self, "handle_ai_dummy")
+		elif id==1:
+			handle_ai = Callable(self, "handle_ai_stupid")
+			#make it hover in the middle
+			timer=0.15
+		elif id==2:
+			handle_ai = Callable(self, "handle_ai_still")
 		
 func reset(timeout=false):
 	unlocked=false
@@ -71,11 +105,14 @@ func reset(timeout=false):
 	velocity=Vector2(0,0)
 	if ai_training:
 		print('reward obtained by player ',player,': ',airl.reward)
-		airl.done=true
 		if timeout:
 			airl.goal_scored(2,0.5)
 	if airl!=null:
-		airl.reset()
+		airl.reset_inference()
+	#if training, choose a random new difficulty
+	if GameState.training:
+		if not ai_training:
+			new_difficulty()
 	'''
 	if ai_flag:
 		if airl!=null:
@@ -195,8 +232,8 @@ func handle_ai_hard(delta):
 					predicted_x = puck_pos.x + puck_vel.x * time
 					#clamp x between the goal line
 					predicted_x = clamp(predicted_x, 
-										goal_width[0], 
-										goal_width[1])
+										home_position.x-alt_goal_width, 
+										home_position.x+alt_goal_width)
 				
 
 			if is_coming and is_dangerous:
@@ -287,7 +324,7 @@ func weighted_random_index(weights: Array) -> int:
 	
 	
 func handle_ai_dummy(_delta):
-	velocity = Vector2(300,300)
+	velocity = Vector2(-300,-300)
 
 func handle_ai_stupid(delta):
 	timer += delta

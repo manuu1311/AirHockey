@@ -12,6 +12,7 @@ from ray.rllib.env.wrappers.pettingzoo_env import ParallelPettingZooEnv
 from ray.rllib.policy.policy import PolicySpec
 from ray.rllib.algorithms.callbacks import DefaultCallbacks
 
+import gymnasium as gym
 
 from godot_rl.core.godot_env import GodotEnv
 from godot_rl.wrappers.petting_zoo_wrapper import GDRLPettingZooEnv
@@ -56,7 +57,29 @@ if __name__ == "__main__":
         port = index + GodotEnv.DEFAULT_PORT
         seed = index
         if is_multiagent:
-            return ParallelPettingZooEnv(GDRLPettingZooEnv(config=env_config, port=port, seed=seed))
+            #TODO:homemade bandaid
+            # Create the Godot PettingZoo env
+            pz_env = GDRLPettingZooEnv(config=env_config, port=port, seed=seed)
+            
+            # This is the "Bandaid": 
+            # We wrap it so RLlib only sees the vector, not the GodotRL dict
+            from ray.rllib.env.wrappers.pettingzoo_env import ParallelPettingZooEnv
+            
+            class FilterObs(gym.Wrapper):
+                def reset(self, **kwargs):
+                    obs, info = self.env.reset(**kwargs)
+                    # For every agent, return ONLY the "obs" vector
+                    return {k: v["obs"] for k, v in obs.items()}, info
+                
+                def step(self, action_dict):
+                    obs, rew, term, trunc, info = self.env.step(action_dict)
+                    # Again, strip away the dictionary, keep the vector
+                    new_obs = {k: v["obs"] for k, v in obs.items()}
+                    return new_obs, rew, term, trunc, info
+
+            return ParallelPettingZooEnv(FilterObs(pz_env))
+        #   TODO: no bandaid
+            #return ParallelPettingZooEnv(GDRLPettingZooEnv(config=env_config, port=port, seed=seed))
         else:
             return RayVectorGodotEnv(config=env_config, port=port, seed=seed)
 
@@ -65,7 +88,7 @@ if __name__ == "__main__":
     policy_names = None
     num_envs = None
     tmp_env = None
-
+    
     if is_multiagent:  # Make temp env to get info needed for multi-agent training config
         print("Starting a temporary multi-agent env to get the policy names")
         tmp_env = GDRLPettingZooEnv(config=exp["config"]["env_config"], show_window=False)

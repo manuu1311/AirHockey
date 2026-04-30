@@ -37,7 +37,6 @@ goal_width = Vector2(330, 470)
 position = Vector2(226, 0)
 scale = Vector2(0.12, 0.12)
 start_position = Vector2(226, 0)
-player = 1
 puck_path = NodePath("../Puck")
 
 [node name="Puck" parent="Table" unique_id=430235678 instance=ExtResource("3_3gjr4")]

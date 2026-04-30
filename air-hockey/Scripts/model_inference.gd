@@ -4,11 +4,9 @@ extends Node
 var params
 #var paths: Array=['model.json','model150.json','model500.json','model600.json']
 #var weights=[0.1,0.2,0.3,0.4]
-var paths: Array=['model_third_it_3m.json','model_third_it_7m.json',
-				   'model500.json','model_third_it_v3.json',
-					'model_third_it_5m.json']
+var paths: Array=[]
 var models: Array
-var weights=[3,50000,1,3,5]
+var weights=[1]
 
 func _ready() -> void:
 	for path in paths:

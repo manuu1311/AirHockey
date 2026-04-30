@@ -189,6 +189,7 @@ def linear_schedule(initial_value: float) -> Callable[[float], float]:
 
 policy_kwargs = dict(net_arch=dict(pi=[128, 128, 128], qf=[128, 128, 128]))
 if args.resume_model_path is None:
+    print('Creating new model')
     model = SAC(
         "MultiInputPolicy",
         env,

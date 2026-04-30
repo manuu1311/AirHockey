@@ -53,6 +53,7 @@ func ResetBoard(timeout=false):
 		print('Resetting board')
 		reset_timer_id += 1  
 		#give puck to the ai
+		#-1: north 1: south
 		playerPuckVel=-1
 	start_reset_timer()  
 	GameState.game_state=GameState.GameStates.COUNTDOWN

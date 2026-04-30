@@ -6,51 +6,16 @@
 [node name="Game" type="Node2D" unique_id=1499139562]
 
 [node name="Game" parent="." unique_id=423389826 instance=ExtResource("1_lacsm")]
-position = Vector2(52, 243)
-
-[node name="Table" parent="Game" index="1" unique_id=1331311115]
-position = Vector2(348, 203)
-
-[node name="PaddleN" parent="Game/Table" index="4" unique_id=1823900199]
-difficulty = 2
-middle_line = 460.0
-global_goal_line = 70.0
-goal_width = Vector2(320, 480)
-ai_training = false
-
-[node name="GameState" parent="Game" index="3" unique_id=466700336]
-difficulty = 2
+position = Vector2(52, -6)
 
 [node name="Game2" parent="." unique_id=731054098 instance=ExtResource("1_lacsm")]
 position = Vector2(945, 243)
 
-[node name="Table" parent="Game2" index="1" unique_id=1331311115]
-position = Vector2(361, 203)
-
-[node name="PaddleN" parent="Game2/Table" index="4" unique_id=1823900199]
-difficulty = 2
-middle_line = 450.0
-global_goal_line = 70.0
-goal_width = Vector2(1225, 1380)
-ai_training = false
-
 [node name="Game3" parent="." unique_id=399773725 instance=ExtResource("1_lacsm")]
 position = Vector2(1742, 243)
 
-[node name="Table" parent="Game3" index="1" unique_id=1331311115]
-position = Vector2(407, 216)
-
-[node name="PaddleN" parent="Game3/Table" index="4" unique_id=1823900199]
-difficulty = 1
-middle_line = 450.0
-goal_width = Vector2(0, 0)
-ai_training = false
-
 [node name="Game4" parent="." unique_id=46831435 instance=ExtResource("1_lacsm")]
 position = Vector2(2604, 22)
-
-[node name="PaddleS" parent="Game4/Table" parent_id_path=PackedInt32Array(46831435, 1331311115) index="5" unique_id=560494842]
-ai_training = false
 
 [node name="Game5" parent="." unique_id=403049711 instance=ExtResource("1_lacsm")]
 position = Vector2(5, -1280)
@@ -71,14 +36,5 @@ zoom = Vector2(0.23, 0.23)
 [node name="Sync" type="Node" parent="." unique_id=264584727]
 script = ExtResource("9_lcfdc")
 action_repeat = 4
-speed_up = 3.0
+speed_up = 8.0
 metadata/_custom_type_script = "uid://dwc001u0axl10"
-
-[editable path="Game"]
-[editable path="Game/Table/Puck"]
-[editable path="Game2"]
-[editable path="Game2/Table/Puck"]
-[editable path="Game3"]
-[editable path="Game3/Table/Puck"]
-[editable path="Game4"]
-[editable path="Game4/Table/Puck"]

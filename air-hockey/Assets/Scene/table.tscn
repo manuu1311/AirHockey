@@ -37,7 +37,7 @@ size = Vector2(39.899994, 20)
 size = Vector2(20, 38.085144)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_mdr45"]
-b = Vector2(0, -137)
+b = Vector2(0, -138.9)
 
 [node name="Table" type="Sprite2D" unique_id=1331311115]
 position = Vector2(0, 213)
@@ -174,7 +174,7 @@ collision_layer = 8
 collision_mask = 4
 
 [node name="Trigger" type="CollisionShape2D" parent="GoalLlines/GoalLineSouth" unique_id=596989533]
-position = Vector2(25.43, 0)
+position = Vector2(29.34, 0)
 shape = SubResource("SegmentShape2D_mdr45")
 debug_color = Color(0, 0.59781516, 0.71432704, 0.41960785)
 
@@ -184,5 +184,5 @@ collision_layer = 8
 collision_mask = 4
 
 [node name="Trigger" type="CollisionShape2D" parent="GoalLlines/GoalLineNorth" unique_id=2012191310]
-position = Vector2(-19.54, 0)
+position = Vector2(-21.61, 0)
 shape = SubResource("SegmentShape2D_mdr45")
