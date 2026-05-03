@@ -198,9 +198,9 @@ if args.resume_model_path is None:
         buffer_size=1000000,
         learning_starts=10000,
         batch_size=256,
-        ent_coef='auto',
-        tau=0.005,
-        gamma=0.99,
+        ent_coef=0.1,
+        tau=0.01,
+        gamma=0.995,
         train_freq=1,
         gradient_steps=1,
         policy_kwargs=policy_kwargs,
@@ -211,7 +211,10 @@ else:
     path_buffer=pathlib.Path(args.resume_model_path+'_buffer')
     print("Loading model: " + os.path.abspath(path_zip))
     model = SAC.load(path_zip, env=env, tensorboard_log=args.experiment_dir)
-    model.load_replay_buffer(path_buffer)
+    #increase the entropy and reset the optimizer
+    #model.ent_coef = "auto_0.5"
+    #model._setup_model()
+    #model.load_replay_buffer(path_buffer)
 
 if args.inference:
     obs = env.reset()
@@ -219,7 +222,7 @@ if args.inference:
         action, _state = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
 else:
-    learn_arguments = dict(total_timesteps=args.timesteps, tb_log_name=args.experiment_name)
+    learn_arguments = dict(total_timesteps=args.timesteps, tb_log_name=args.experiment_name, reset_num_timesteps=False)
     if args.save_checkpoint_frequency:
         print("Checkpoint saving enabled. Checkpoints will be saved to: " + abs_path_checkpoint)
         checkpoint_callback = CheckpointCallback(

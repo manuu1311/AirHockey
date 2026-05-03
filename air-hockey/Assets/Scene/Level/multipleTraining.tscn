@@ -9,10 +9,10 @@
 position = Vector2(52, -6)
 
 [node name="Game2" parent="." unique_id=731054098 instance=ExtResource("1_lacsm")]
-position = Vector2(945, 243)
+position = Vector2(880, 9)
 
 [node name="Game3" parent="." unique_id=399773725 instance=ExtResource("1_lacsm")]
-position = Vector2(1742, 243)
+position = Vector2(1735, 35)
 
 [node name="Game4" parent="." unique_id=46831435 instance=ExtResource("1_lacsm")]
 position = Vector2(2604, 22)
@@ -30,11 +30,11 @@ position = Vector2(1705, -1276)
 position = Vector2(2594, -1309)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=501292274]
-position = Vector2(1730.065, -345.58)
-zoom = Vector2(0.23, 0.23)
+position = Vector2(1680, -365)
+zoom = Vector2(0.26, 0.26)
 
 [node name="Sync" type="Node" parent="." unique_id=264584727]
 script = ExtResource("9_lcfdc")
-action_repeat = 4
-speed_up = 8.0
+action_repeat = 5
+speed_up = 3.0
 metadata/_custom_type_script = "uid://dwc001u0axl10"

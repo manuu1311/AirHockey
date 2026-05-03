@@ -1,12 +1,11 @@
 extends Node
 
-@export var model_paths: String='res://Assets/'
-var params
+@export var model_paths: String='res://Assets/checkpoints/'
+var params: Array
 #var paths: Array=['model.json','model150.json','model500.json','model600.json']
 #var weights=[0.1,0.2,0.3,0.4]
-var paths: Array=[]
-var models: Array
-var weights=[1]
+var paths: Array=['sac_warmup.json','sac1m.json','sac2m.json',
+					'sac4m.json','sac5m.json']
 
 func _ready() -> void:
 	for path in paths:
@@ -14,15 +13,12 @@ func _ready() -> void:
 		if file:
 			var data = JSON.parse_string(file.get_as_text())
 			if data != null:
-				models.append(data)
+				params.append(data)
 			else:
 				print("JSON parse error for: ", path)
 		else:
 			print("Failed to open file: ", path)
-#load json weights
-func initialise():
-	var id=weighted_random_index(weights)
-	params = models[id]
+
 	
 #random distribution function
 func weighted_random_index(weights_dist: Array) -> int:
@@ -39,53 +35,3 @@ func weighted_random_index(weights_dist: Array) -> int:
 			return i
 
 	return weights_dist.size() - 1  
-#define basic mlp functions
-func matvec(W, x):
-	var out = []
-	for i in range(W.size()): # rows
-		var sum = 0.0
-		for j in range(x.size()):
-			sum += W[i][j] * x[j]
-		out.append(sum)
-	return out
-
-
-func add_bias(v, b):
-	var out = []
-	for i in range(v.size()):
-		out.append(v[i] + b[i])
-	return out
-
-
-func tanh_vec(v):
-	var out = []
-	for i in range(v.size()):
-		out.append(tanh(v[i]))
-	return out
-#inference
-func forward(obs):
-	var W0 = params["mlp_extractor.policy_net.0.weight"]
-	var b0 = params["mlp_extractor.policy_net.0.bias"]
-
-	var W1 = params["mlp_extractor.policy_net.2.weight"]
-	var b1 = params["mlp_extractor.policy_net.2.bias"]
-
-	var W2 = params["action_net.weight"]
-	var b2 = params["action_net.bias"]
-	# Layer 1: 12 -> 64
-	var z1 = matvec(W0, obs['obs'])
-	z1 = add_bias(z1, b0)
-	var a1 = tanh_vec(z1)
-
-	# Layer 2: 64 -> 64
-	var z2 = matvec(W1, a1)
-	z2 = add_bias(z2, b1)
-	var a2 = tanh_vec(z2)
-
-	# Output: 64 -> 2
-	var z3 = matvec(W2, a2)
-	z3 = add_bias(z3, b2)
-	var action = []
-	for x in z3:
-		action.append(clamp(x, -1.0, 1.0))
-	return action

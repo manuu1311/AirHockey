@@ -18,7 +18,6 @@ var playerScores: Array=[0,0]
 var playerPuckVel: int
 
 @export var winScore: int=5
-@export var training: bool
 
 #reset timer variables 
 var reset_delay := 60.0
@@ -34,7 +33,6 @@ func _ready():
 	table=get_node(tablePath)
 	ui.restartButtonPressedSignal.connect(onResetButton)
 	table.goalScored.connect(GoalScored)
-	GameState.training=training
 	print('training: ',GameState.training)
 	print('difficulty: ',GameState.difficulty)
 	playerPuckVel=1
@@ -54,7 +52,7 @@ func ResetBoard(timeout=false):
 		reset_timer_id += 1  
 		#give puck to the ai
 		#-1: north 1: south
-		playerPuckVel=-1
+		playerPuckVel=0
 	start_reset_timer()  
 	GameState.game_state=GameState.GameStates.COUNTDOWN
 	ResetPaddles(timeout)

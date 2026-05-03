@@ -46,9 +46,9 @@ texture = ExtResource("1_1sqqh")
 script = ExtResource("2_mdr45")
 
 [node name="Walls" type="Node2D" parent="." unique_id=345619757]
+visible = false
 
 [node name="NorthWall" type="StaticBody2D" parent="Walls" unique_id=309872298]
-visible = false
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/NorthWall" unique_id=1050267165]
@@ -60,7 +60,6 @@ position = Vector2(-396, -131.99998)
 shape = SubResource("RectangleShape2D_1sqqh")
 
 [node name="LeftWall" type="StaticBody2D" parent="Walls" unique_id=1262844076]
-visible = false
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/LeftWall" unique_id=1609659762]
@@ -68,7 +67,6 @@ position = Vector2(1.0000057, 233)
 shape = SubResource("RectangleShape2D_l5bjd")
 
 [node name="RightWall" type="StaticBody2D" parent="Walls" unique_id=987232983]
-visible = false
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/RightWall" unique_id=1603226976]
@@ -76,7 +74,6 @@ position = Vector2(0, -233)
 shape = SubResource("RectangleShape2D_mdr45")
 
 [node name="SouthWall" type="StaticBody2D" parent="Walls" unique_id=1957887670]
-visible = false
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/SouthWall" unique_id=1813091321]
@@ -101,7 +98,6 @@ shape = SubResource("SegmentShape2D_0x6sf")
 debug_color = Color(0, 0.6, 0.69803923, 0.7882353)
 
 [node name="SouthernBlock" type="StaticBody2D" parent="Walls" unique_id=249989992]
-visible = false
 collision_layer = 16
 collision_mask = 2
 
@@ -110,7 +106,6 @@ position = Vector2(355, -1.532106e-05)
 shape = SubResource("SegmentShape2D_0x6sf")
 
 [node name="SouthernBlock2" type="StaticBody2D" parent="Walls" unique_id=409351471]
-visible = false
 collision_layer = 16
 collision_mask = 2
 
@@ -119,7 +114,6 @@ position = Vector2(-347, 1.5364334e-05)
 shape = SubResource("SegmentShape2D_0x6sf")
 
 [node name="NEWall" type="StaticBody2D" parent="Walls" unique_id=528922759]
-visible = false
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/NEWall" unique_id=647666229]
@@ -129,7 +123,6 @@ scale = Vector2(0.9999999, 0.9999999)
 shape = SubResource("RectangleShape2D_0x6sf")
 
 [node name="NWWall" type="StaticBody2D" parent="Walls" unique_id=1173137090]
-visible = false
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/NWWall" unique_id=444196862]
@@ -138,7 +131,6 @@ rotation = -0.6230825
 shape = SubResource("RectangleShape2D_emyag")
 
 [node name="SWWall" type="StaticBody2D" parent="Walls" unique_id=1880029019]
-visible = false
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/SWWall" unique_id=2034700607]
@@ -147,7 +139,6 @@ rotation = -0.8953539
 shape = SubResource("RectangleShape2D_yloqi")
 
 [node name="SEWall" type="StaticBody2D" parent="Walls" unique_id=1302079746]
-visible = false
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/SEWall" unique_id=1011867025]

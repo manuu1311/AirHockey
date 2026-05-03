@@ -4,9 +4,11 @@
 [ext_resource type="PackedScene" uid="uid://u38qbh1wiqph" path="res://Assets/Scene/table.tscn" id="1_eiiri"]
 [ext_resource type="PackedScene" uid="uid://cdrswyk8arvu1" path="res://Assets/Scene/paddle.tscn" id="2_3gjr4"]
 [ext_resource type="PackedScene" uid="uid://cc16ncw2jvu4m" path="res://Assets/Scene/puck.tscn" id="3_3gjr4"]
+[ext_resource type="Script" uid="uid://d1fvow3eobab8" path="res://Scripts/ai_controller.gd" id="4_xcpoy"]
 [ext_resource type="Script" uid="uid://pm2tk1y0cnn7" path="res://Scripts/puck.gd" id="4_y0r01"]
 [ext_resource type="Script" uid="uid://bx4bwqydmvejb" path="res://Scripts/gameManager.gd" id="5_86wvc"]
 [ext_resource type="Script" uid="uid://ce3j1n0kac1th" path="res://Scripts/game_state.gd" id="7_eipe5"]
+[ext_resource type="PackedScene" uid="uid://bv8kxd4i6j7kw" path="res://Assets/Scene/modelInference.tscn" id="9_7qndf"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_eiiri"]
 load_path = "res://.godot/imported/table.png-1c1366adec3c0bd92464a1fe6da1281c.ctex"
@@ -29,9 +31,15 @@ ai_flag = true
 puck_path = NodePath("../Puck")
 reaction_time = 0.2
 speed = 300.0
-middle_line = 470.0
-global_goal_line = 90.0
-goal_width = Vector2(330, 470)
+airl_path = NodePath("AIController2D")
+
+[node name="AIController2D" type="Node2D" parent="Table/PaddleN" unique_id=37753803 node_paths=PackedStringArray("paddle", "opponent", "puck")]
+script = ExtResource("4_xcpoy")
+paddle = NodePath("..")
+opponent = NodePath("../../PaddleS")
+puck = NodePath("../../Puck")
+policy_name = "learner"
+metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 
 [node name="PaddleS" parent="Table" unique_id=560494842 instance=ExtResource("2_3gjr4")]
 position = Vector2(226, 0)
@@ -56,5 +64,7 @@ tablePath = NodePath("../Table")
 
 [node name="GameState" type="Node" parent="." unique_id=466700336]
 script = ExtResource("7_eipe5")
+
+[node name="ModelInference" parent="." unique_id=588715386 instance=ExtResource("9_7qndf")]
 
 [editable path="Table/Puck"]

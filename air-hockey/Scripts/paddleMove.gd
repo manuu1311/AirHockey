@@ -9,13 +9,13 @@ extends CharacterBody2D
 @export var difficulty: int = -1
 #variable to lock the paddle movement in point start
 var unlocked=false
-var maxspeed=7000
+var maxspeed=3000
 
 #ai params
 @export var reaction_time := 0.1
 var timer := 0.0
 var last_target : Vector2
-@export var speed := 600.0
+@export var speed :float= 600.0
 var home_position
 var handle_ai: Callable
 var middle_line: float
@@ -31,7 +31,7 @@ var attack_threshold:=500
 #rl agent
 @export var airl_path: NodePath 
 var airl: Node2D
-var airl_speed:=400
+var airl_speed:float =maxspeed
 @export var ai_training:bool
 
 
@@ -41,6 +41,8 @@ func _ready() -> void:
 	global_goal_line=home_position.y-100
 	middle_line=home_position.y+284
 	alt_goal_width=80
+	if not ai_flag:
+		return
 	if difficulty==-1:
 		difficulty=GameState.difficulty
 	if difficulty == 0:
@@ -73,7 +75,7 @@ func _ready() -> void:
 	
 func new_difficulty():
 	print('changing difficulty..')
-	var weights=[0,0,0,1]
+	var weights=[5,5,0,20,0]
 	difficulty =weighted_random_index(weights)
 	print('difficulty changed to: ',difficulty)
 	if difficulty == 0:
@@ -87,7 +89,7 @@ func new_difficulty():
 		reaction_time=0.1
 	elif difficulty==3:
 		#random dummy movements
-		weights=[1,1,1]
+		weights=[3,1,1]
 		var id =weighted_random_index(weights)
 		if id==0:
 			handle_ai = Callable(self, "handle_ai_dummy")
@@ -97,6 +99,9 @@ func new_difficulty():
 			timer=0.15
 		elif id==2:
 			handle_ai = Callable(self, "handle_ai_still")
+	
+	elif difficulty==4:
+		handle_ai = Callable(self, "handle_ai_rl")
 		
 func reset(timeout=false):
 	unlocked=false
@@ -106,13 +111,14 @@ func reset(timeout=false):
 	if ai_training:
 		print('reward obtained by player ',player,': ',airl.reward)
 		if timeout:
-			airl.goal_scored(2,0.5)
+			airl.goal_scored(2,1)
 	if airl!=null:
 		airl.reset_inference()
 	#if training, choose a random new difficulty
 	if GameState.training:
 		if not ai_training:
 			new_difficulty()
+	
 	'''
 	if ai_flag:
 		if airl!=null:
@@ -190,7 +196,7 @@ func handle_ai_normal(delta):
 			
 			var prediction_time = 0.3
 			var predicted_pos = puck.global_position + puck.linear_velocity * prediction_time
-			if puck.global_position.y < middle_line:
+			if puck.global_position.y < middle_line-50:
 				# DEFEND
 				last_target = predicted_pos
 			else:
