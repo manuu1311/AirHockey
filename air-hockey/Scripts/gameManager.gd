@@ -47,17 +47,17 @@ func onResetButton():
 	
 #reset the whole board before each point
 func ResetBoard(timeout=false):
-	if GameState.training==true:
+	if GameState.training:
 		print('Resetting board')
 		reset_timer_id += 1  
 		#give puck to the ai
 		#-1: north 1: south
-		playerPuckVel=0
+		playerPuckVel=1
 	start_reset_timer()  
 	GameState.game_state=GameState.GameStates.COUNTDOWN
 	ResetPaddles(timeout)
 	puck.reset()
-	if GameState.training==false:
+	if not GameState.training:
 		ui.startCountdown()
 		await ui.countdownFinished
 	GameState.game_state=GameState.GameStates.PLAYING
@@ -94,7 +94,7 @@ func GoalScored(player:int):
 	
 #reset table and start new point
 func newPoint():
-	if GameState.training==false:
+	if not GameState.training:
 		await get_tree().create_timer(2).timeout
 	ResetBoard()
 

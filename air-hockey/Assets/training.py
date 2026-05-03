@@ -214,7 +214,7 @@ else:
     #increase the entropy and reset the optimizer
     #model.ent_coef = "auto_0.5"
     #model._setup_model()
-    #model.load_replay_buffer(path_buffer)
+    model.load_replay_buffer(path_buffer)
 
 if args.inference:
     obs = env.reset()

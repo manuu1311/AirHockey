@@ -18,14 +18,14 @@ var opponent_goal_position=Vector2(-1,0.5)
 #reward for goal
 @export var goal_reward: float= 3
 #passive reward weight for puck position
-@export var puck_position_weight: float=0.005
-@export var puck_velocity_weight: float=0.005
+@export var puck_position_weight: float=0.001
+@export var puck_velocity_weight: float=0.001
 @export var passive_weight: float=0.001
 @export var middle_weight:float = 0.005
-@export var puck_distance_weight: float=0.005
+@export var puck_distance_weight: float=0.001
 @export var inference=true
 @export var timeout:float=60
-var round_start_time := 0.0
+var simulated_time := 0.0
 var inference_steps:int=0
 @export var inference_action_repeat:int=5
 
@@ -52,9 +52,9 @@ func _ready():
 	field_width/=2
 	
 func reset_inference():
-	round_start_time = Time.get_ticks_msec() / 1000.0
+	simulated_time=0
 	if inference: 
-		inference_id=ModelInference.weighted_random_index([0,0,0,0,1])
+		inference_id=ModelInference.weighted_random_index([1,0,1,0,1])
 		if paddle.debug:
 			print('inferencing with model ',inference_id)
 		
@@ -77,9 +77,9 @@ func get_obs() -> Dictionary:
 	obs.append(x_mirrored*puck.linear_velocity.y / max_puck_speed)
 	obs.append(puck.linear_velocity.x / max_puck_speed)
 	#normalised velocity direction
-	#var puck_dir = puck.linear_velocity.normalized()
-	#obs.append(x_mirrored * puck_dir.y)
-	#obs.append(puck_dir.x)
+	var puck_dir = puck.linear_velocity.normalized()
+	obs.append(x_mirrored * puck_dir.y)
+	obs.append(puck_dir.x)
 	#flip x and y!! velocity is in world space
 	obs.append(x_mirrored*paddle.velocity.y / max_paddle_speed)
 	obs.append(paddle.velocity.x / max_paddle_speed)
@@ -115,22 +115,23 @@ func get_obs() -> Dictionary:
 	obs.append(x_mirrored*rel_puck.x / (field_width*2))
 	obs.append(rel_puck.y / (field_height*2))
 	#normalised direction vector to puck
-	#var dir_to_puck = rel_puck.normalized()
-	#obs.append(x_mirrored * dir_to_puck.x)
-	#obs.append(dir_to_puck.y)
+	var dir_to_puck = rel_puck.normalized()
+	obs.append(x_mirrored * dir_to_puck.x)
+	obs.append(dir_to_puck.y)
 	#relative velocities
 	var rel_vel = puck.linear_velocity - paddle.velocity
 	obs.append(x_mirrored*rel_vel.y / (max_puck_speed+max_paddle_speed))
 	obs.append(rel_vel.x / (max_puck_speed+max_paddle_speed))
 	#relative direction to goal
-	var rel_goal = opponent_goal_position - puck.position
-	obs.append(x_mirrored * rel_goal.x / field_width)
-	obs.append(rel_goal.y / field_height)
+	var normalised_puckpos=puck.position
+	normalised_puckpos.x/=field_width
+	normalised_puckpos.y/=field_height
+	var rel_goal = opponent_goal_position - normalised_puckpos
+	obs.append(x_mirrored * rel_goal.x / (field_width*2))
+	obs.append(rel_goal.y / (field_height*2))
 	
 	#scaled round time
-	var current_time = Time.get_ticks_msec() / 1000.0
-	var elapsed = current_time - round_start_time
-	var time_norm = clamp(elapsed / timeout, 0.0, 1.0)
+	var time_norm = clamp(simulated_time / timeout, 0.0, 1.0)
 	obs.append(time_norm)
 	return {"obs": obs}
 
@@ -191,9 +192,7 @@ func get_obs_legacy() -> Dictionary:
 	obs.append(rel_vel.x / (max_puck_speed+max_paddle_speed))
 	
 	#scaled round time
-	var current_time = Time.get_ticks_msec() / 1000.0
-	var elapsed = current_time - round_start_time
-	var time_norm = clamp(elapsed / timeout, 0.0, 1.0)
+	var time_norm = clamp(simulated_time / timeout, 0.0, 1.0)
 	obs.append(time_norm)
 	return {"obs": obs}
 
@@ -240,7 +239,7 @@ func puck_velocity_reward(delta:float):
 	if x_mirrored*puck.position.x/field_width>-0.1 and abs(puck.linear_velocity.length())<200:
 		reward-=puck_velocity_weight
 	elif x_mirrored*puck.linear_velocity.y<-200:
-		reward+=abs(puck.linear_velocity.length()/puck.maxspeed)*puck_velocity_weight*delta
+		reward+=abs(puck.linear_velocity.length())*puck_velocity_weight*delta
 	#reward -= x_mirrored * puck.linear_velocity.y*puck_velocity_weight*delta
 	#if puck is stuck in the middle: punish
 	#if abs(last_puck_pos.x)<20 and abs(puck.position.x)<20:
@@ -249,6 +248,7 @@ func puck_velocity_reward(delta:float):
 	#	reward -= x_mirrored * puck.linear_velocity.y*puck_velocity_weight*delta
 
 func passive_reward(delta:float):
+	simulated_time+=delta
 	reward-=passive_weight*delta
 	
 func middle_reward(delta:float):

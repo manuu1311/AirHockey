@@ -31,7 +31,7 @@ var attack_threshold:=500
 #rl agent
 @export var airl_path: NodePath 
 var airl: Node2D
-var airl_speed:float =maxspeed
+var airl_speed:float =1000
 @export var ai_training:bool
 
 
@@ -75,7 +75,7 @@ func _ready() -> void:
 	
 func new_difficulty():
 	print('changing difficulty..')
-	var weights=[5,5,0,20,0]
+	var weights=[3,3,6,3,10]
 	difficulty =weighted_random_index(weights)
 	print('difficulty changed to: ',difficulty)
 	if difficulty == 0:

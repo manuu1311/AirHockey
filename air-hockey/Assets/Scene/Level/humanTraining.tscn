@@ -31,8 +31,6 @@ player = 1
 ai_flag = true
 puck_path = NodePath("../Puck")
 difficulty = 3
-reaction_time = 0.2
-speed = 300.0
 airl_path = NodePath("AIController2D")
 
 [node name="AIController2D" type="Node2D" parent="Table/PaddleN" unique_id=1602674295 node_paths=PackedStringArray("paddle", "opponent", "puck")]
@@ -40,9 +38,6 @@ script = ExtResource("4_5ophu")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleS")
 puck = NodePath("../../Puck")
-puck_velocity_weight = 0.05
-passive_weight = 0.05
-puck_distance_weight = 0.01
 policy_name = "learner"
 metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 
@@ -54,16 +49,12 @@ ai_flag = true
 puck_path = NodePath("../Puck")
 difficulty = 3
 airl_path = NodePath("AIController2D")
-ai_training = true
 
 [node name="AIController2D" type="Node2D" parent="Table/PaddleS" unique_id=539421660 node_paths=PackedStringArray("paddle", "opponent", "puck") groups=["AGENT"]]
 script = ExtResource("4_5ophu")
 paddle = NodePath("..")
 opponent = NodePath("../../PaddleN")
 puck = NodePath("../../Puck")
-puck_velocity_weight = 0.02
-passive_weight = 0.02
-puck_distance_weight = 0.01
 inference = false
 policy_name = "learner"
 metadata/_custom_type_script = "uid://p26yw7jrrnqk"
