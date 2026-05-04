@@ -75,7 +75,7 @@ func _ready() -> void:
 	
 func new_difficulty():
 	print('changing difficulty..')
-	var weights=[3,3,6,3,10]
+	var weights=[1,3,5,1,10]
 	difficulty =weighted_random_index(weights)
 	print('difficulty changed to: ',difficulty)
 	if difficulty == 0:

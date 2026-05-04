@@ -3,7 +3,7 @@ import numpy as np
 import json
 #python training.py --save_model_path=model_second_it --timesteps=50000 resume_model_path=model_second_it --onnx_export_path=model_second_it
 #name of model to convert
-name='sac1m'
+name='sac4m'
 mode='sac'
 debug=1
 
@@ -22,13 +22,13 @@ def save_weights(model):
     weights_dict = {k: v.detach().cpu().numpy().tolist() for k, v in state_dict.items()}
 
     # Save to JSON
-    with open(name+".json", "w") as f:
+    with open('checkpoints/'+name+".json", "w") as f:
         json.dump(weights_dict, f)
  
     
 #load the weights from json
 def load_weights():
-    with open(name + ".json", "r") as f:
+    with open('checkpoints/'+name + ".json", "r") as f:
         return json.load(f)
 
 #manual nn output starting from loaded params
@@ -57,10 +57,6 @@ def forward(obs, params):
         W1 = np.array(params["latent_pi.2.weight"])
         b1 = np.array(params["latent_pi.2.bias"])
 
-        # Layer 3
-        W2 = np.array(params["latent_pi.4.weight"])
-        b2 = np.array(params["latent_pi.4.bias"])
-
         # Output layers
         W_mu = np.array(params["mu.weight"])
         b_mu = np.array(params["mu.bias"])
@@ -77,11 +73,7 @@ def forward(obs, params):
         #relu
         A2 = np.maximum(0, Z2)
 
-        Z3 = A2 @ W2.T + b2
-        #relu
-        A3 = np.maximum(0, Z3)
-
-        mu = A3 @ W_mu.T + b_mu
+        mu = A2 @ W_mu.T + b_mu
 
         # Deterministic action
         action = np.tanh(mu)
@@ -94,15 +86,15 @@ model=SAC.load("checkpoints/"+name+".zip")
 
 if debug:
     if mode=='ppo':
-        for name, param in model.policy.named_parameters():
-            print(name, param.shape)
-        for name, module in model.policy.named_modules():
-            print(name, module)
+        for namep, param in model.policy.named_parameters():
+            print(namep, param.shape)
+        for namep, module in model.policy.named_modules():
+            print(namep, module)
     elif mode=='sac':
-        for name, param in model.actor.named_parameters():
-            print(name, param.shape)
-        for name, module in model.actor.named_modules():
-            print(name, module)
+        for namep, param in model.actor.named_parameters():
+            print(namep, param.shape)
+        for namep, module in model.actor.named_modules():
+            print(namep, module)
 
 
 save_weights(model)
@@ -111,7 +103,7 @@ params = load_weights()
 for i in [13,17,12,0,15,25,111]:
     #random observation
     np.random.seed(i)
-    obs=np.random.random(size=23)
+    obs=np.random.random(size=19)
     obs = {"obs": obs}
     #deterministic predict with sb3
     action, _ = model.predict(obs,deterministic=True)

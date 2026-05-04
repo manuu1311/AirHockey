@@ -187,7 +187,7 @@ def linear_schedule(initial_value: float) -> Callable[[float], float]:
 
     return func
 
-policy_kwargs = dict(net_arch=dict(pi=[128, 128, 128], qf=[128, 128, 128]))
+policy_kwargs = dict(net_arch=dict(pi=[128,128], qf=[256,256]))
 if args.resume_model_path is None:
     print('Creating new model')
     model = SAC(
@@ -198,11 +198,11 @@ if args.resume_model_path is None:
         buffer_size=1000000,
         learning_starts=10000,
         batch_size=256,
-        ent_coef=0.1,
-        tau=0.01,
-        gamma=0.995,
+        ent_coef='auto',
+        tau=0.005,
+        gamma=0.99,
         train_freq=1,
-        gradient_steps=1,
+        gradient_steps=2,
         policy_kwargs=policy_kwargs,
         tensorboard_log=args.experiment_dir,
     )
@@ -222,7 +222,7 @@ if args.inference:
         action, _state = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
 else:
-    learn_arguments = dict(total_timesteps=args.timesteps, tb_log_name=args.experiment_name, reset_num_timesteps=False)
+    learn_arguments = dict(total_timesteps=args.timesteps, tb_log_name=args.experiment_name)
     if args.save_checkpoint_frequency:
         print("Checkpoint saving enabled. Checkpoints will be saved to: " + abs_path_checkpoint)
         checkpoint_callback = CheckpointCallback(

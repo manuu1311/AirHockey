@@ -36,5 +36,5 @@ zoom = Vector2(0.26, 0.26)
 [node name="Sync" type="Node" parent="." unique_id=264584727]
 script = ExtResource("9_lcfdc")
 action_repeat = 5
-speed_up = 3.0
+speed_up = 5.0
 metadata/_custom_type_script = "uid://dwc001u0axl10"

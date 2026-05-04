@@ -48,6 +48,7 @@ start_position = Vector2(226, 0)
 puck_path = NodePath("../Puck")
 
 [node name="Puck" parent="Table" unique_id=430235678 instance=ExtResource("3_3gjr4")]
+max_contacts_reported = 1
 script = ExtResource("4_y0r01")
 
 [node name="CollisionShape2D" parent="Table/Puck" index="0" unique_id=818533871]

@@ -18,16 +18,18 @@ var opponent_goal_position=Vector2(-1,0.5)
 #reward for goal
 @export var goal_reward: float= 3
 #passive reward weight for puck position
-@export var puck_position_weight: float=0.001
-@export var puck_velocity_weight: float=0.001
+@export var puck_position_weight: float=0.002
+@export var puck_velocity_weight: float=0.002
 @export var passive_weight: float=0.001
-@export var middle_weight:float = 0.005
-@export var puck_distance_weight: float=0.001
+@export var middle_weight:float = 0.002
+@export var puck_distance_weight: float=0.002
+@export var puck_hit_weight: float=0.5
 @export var inference=true
 @export var timeout:float=60
 var simulated_time := 0.0
 var inference_steps:int=0
 @export var inference_action_repeat:int=5
+var hit_puck:bool=false
 
 
 #make observation symmetric
@@ -54,7 +56,7 @@ func _ready():
 func reset_inference():
 	simulated_time=0
 	if inference: 
-		inference_id=ModelInference.weighted_random_index([1,0,1,0,1])
+		inference_id=ModelInference.weighted_random_index([1,1,1,1,1])
 		if paddle.debug:
 			print('inferencing with model ',inference_id)
 		
@@ -77,9 +79,9 @@ func get_obs() -> Dictionary:
 	obs.append(x_mirrored*puck.linear_velocity.y / max_puck_speed)
 	obs.append(puck.linear_velocity.x / max_puck_speed)
 	#normalised velocity direction
-	var puck_dir = puck.linear_velocity.normalized()
-	obs.append(x_mirrored * puck_dir.y)
-	obs.append(puck_dir.x)
+	#var puck_dir = puck.linear_velocity.normalized()
+	#obs.append(x_mirrored * puck_dir.y)
+	#obs.append(puck_dir.x)
 	#flip x and y!! velocity is in world space
 	obs.append(x_mirrored*paddle.velocity.y / max_paddle_speed)
 	obs.append(paddle.velocity.x / max_paddle_speed)
@@ -115,9 +117,9 @@ func get_obs() -> Dictionary:
 	obs.append(x_mirrored*rel_puck.x / (field_width*2))
 	obs.append(rel_puck.y / (field_height*2))
 	#normalised direction vector to puck
-	var dir_to_puck = rel_puck.normalized()
-	obs.append(x_mirrored * dir_to_puck.x)
-	obs.append(dir_to_puck.y)
+	#var dir_to_puck = rel_puck.normalized()
+	#obs.append(x_mirrored * dir_to_puck.x)
+	#obs.append(dir_to_puck.y)
 	#relative velocities
 	var rel_vel = puck.linear_velocity - paddle.velocity
 	obs.append(x_mirrored*rel_vel.y / (max_puck_speed+max_paddle_speed))
@@ -133,6 +135,9 @@ func get_obs() -> Dictionary:
 	#scaled round time
 	var time_norm = clamp(simulated_time / timeout, 0.0, 1.0)
 	obs.append(time_norm)
+	for elem in obs:
+		if elem>1 or elem<-1:
+			print(obs)
 	return {"obs": obs}
 
 func get_obs_legacy() -> Dictionary:
@@ -236,7 +241,7 @@ func puck_position_reward(delta:float):
 	
 
 func puck_velocity_reward(delta:float):
-	if x_mirrored*puck.position.x/field_width>-0.1 and abs(puck.linear_velocity.length())<200:
+	if x_mirrored*puck.position.x/field_width>-0.1 and abs(puck.linear_velocity.length())<50:
 		reward-=puck_velocity_weight
 	elif x_mirrored*puck.linear_velocity.y<-200:
 		reward+=abs(puck.linear_velocity.length())*puck_velocity_weight*delta
@@ -260,6 +265,15 @@ func puck_distance_reward(delta:float):
 	var rel_puck = (puck.position - paddle.position)
 	var dist = rel_puck.length()/(field_width*2)
 	reward +=puck_distance_weight*(1-dist)*delta
+	
+func puck_hit_reward():
+	if hit_puck==false:
+		reward+=puck_hit_weight
+		hit_puck=true
+		print('hit puck first!')
+	else:
+		reward+=puck_hit_weight/100
+		print('hit puck NOT first!')
 	
 	
 #handle action computation
@@ -310,25 +324,20 @@ func relu_vec(v):
 func forward(obs, params):
 	var x = obs["obs"]  # should be size 23
 
-	# Layer 0: 23 -> 128
+	# Layer 0: 19 -> 256
 	var W0 = params["latent_pi.0.weight"]
 	var b0 = params["latent_pi.0.bias"]
 	var h0 = relu_vec(add_bias(matvec(W0, x), b0))
 
-	# Layer 1: 128 -> 128
+	# Layer 1: 256 -> 256
 	var W1 = params["latent_pi.2.weight"]
 	var b1 = params["latent_pi.2.bias"]
 	var h1 = relu_vec(add_bias(matvec(W1, h0), b1))
 
-	# Layer 2: 128 -> 128
-	var W2 = params["latent_pi.4.weight"]
-	var b2 = params["latent_pi.4.bias"]
-	var h2 = relu_vec(add_bias(matvec(W2, h1), b2))
-
 	# Output (mu): 128 -> 2
 	var W_mu = params["mu.weight"]
 	var b_mu = params["mu.bias"]
-	var mu = add_bias(matvec(W_mu, h2), b_mu)
+	var mu = add_bias(matvec(W_mu, h1), b_mu)
 
 	# Deterministic action (SAC uses tanh squashing)
 	var action = tanh_vec(mu)
@@ -363,3 +372,8 @@ func forward_ppo(obs,params):
 		action.append(clamp(x, -1.0, 1.0))
 	return action
 	
+
+
+func _on_puck_body_entered(body: Node) -> void:
+	if body==paddle:
+		puck_hit_reward()
