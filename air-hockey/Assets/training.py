@@ -11,6 +11,8 @@ from godot_rl.core.utils import can_import
 from godot_rl.wrappers.onnx.stable_baselines_export import export_model_as_onnx
 from godot_rl.wrappers.stable_baselines_wrapper import StableBaselinesGodotEnv
 
+from torch import tensor,float32
+
 # To download the env source and binary:
 # 1.  gdrl.env_from_hub -r edbeeching/godot_rl_BallChase
 # 2.  chmod +x examples/godot_rl_BallChase/bin/BallChase.x86_64
@@ -201,8 +203,8 @@ if args.resume_model_path is None:
         ent_coef='auto',
         tau=0.005,
         gamma=0.99,
-        train_freq=1,
-        gradient_steps=2,
+        train_freq=64,
+        gradient_steps=64,
         policy_kwargs=policy_kwargs,
         tensorboard_log=args.experiment_dir,
     )
@@ -210,10 +212,14 @@ else:
     path_zip = pathlib.Path(args.resume_model_path)
     path_buffer=pathlib.Path(args.resume_model_path+'_buffer')
     print("Loading model: " + os.path.abspath(path_zip))
-    model = SAC.load(path_zip, env=env, tensorboard_log=args.experiment_dir)
+    model = SAC.load(path_zip, env=env, tensorboard_log=args.experiment_dir,
+                     custom_objects={"ent_coef": 0.2})
     #increase the entropy and reset the optimizer
-    #model.ent_coef = "auto_0.5"
+    alpha=0.2
+    model.ent_coef = alpha
+    model.ent_coef_tensor = tensor(alpha, dtype=float32).to(model.device)
     #model._setup_model()
+    model.learning_starts = 0
     model.load_replay_buffer(path_buffer)
 
 if args.inference:
