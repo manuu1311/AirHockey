@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://crmg4vo825wfw" path="res://Assets/Scene/Level/main_menu.gd" id="1_h4ed0"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h4ed0"]
+
 [node name="MainMenu" type="Control" unique_id=784899984]
 layout_mode = 3
 anchors_preset = 15
@@ -20,7 +22,8 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2946382, 3.218744e-07, 8.4228816e-08, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="background" unique_id=68436470]
+[node name="SinglePlayer" type="VBoxContainer" parent="background" unique_id=68436470]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -35,7 +38,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 44
 
-[node name="Easy" type="Button" parent="background/VBoxContainer" unique_id=446651776]
+[node name="Easy" type="Button" parent="background/SinglePlayer" unique_id=446651776]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -45,7 +48,7 @@ theme_override_colors/font_hover_color = Color(0.1255318, 0.24354291, 1.4439226e
 theme_override_font_sizes/font_size = 99
 text = "Easy"
 
-[node name="Normal" type="Button" parent="background/VBoxContainer" unique_id=68532188]
+[node name="Normal" type="Button" parent="background/SinglePlayer" unique_id=68532188]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -55,7 +58,7 @@ theme_override_colors/font_hover_color = Color(0.4146426, 0.19603941, 0, 1)
 theme_override_font_sizes/font_size = 99
 text = "Normal"
 
-[node name="Hard" type="Button" parent="background/VBoxContainer" unique_id=523189535]
+[node name="Hard" type="Button" parent="background/SinglePlayer" unique_id=523189535]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -65,7 +68,7 @@ theme_override_colors/font_hover_color = Color(0.40246043, 0, 0.003907351, 1)
 theme_override_font_sizes/font_size = 99
 text = "Hard"
 
-[node name="MLAgent" type="Button" parent="background/VBoxContainer" unique_id=1297991582]
+[node name="MLAgent" type="Button" parent="background/SinglePlayer" unique_id=1297991582]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -75,7 +78,114 @@ theme_override_colors/font_hover_color = Color(0.15577999, 0.12416633, 0.1103156
 theme_override_font_sizes/font_size = 99
 text = "MLAgent"
 
-[connection signal="pressed" from="background/VBoxContainer/Easy" to="." method="_on_button_pressed" binds= [0]]
-[connection signal="pressed" from="background/VBoxContainer/Normal" to="." method="_on_button_pressed" binds= [1]]
-[connection signal="pressed" from="background/VBoxContainer/Hard" to="." method="_on_button_pressed" binds= [2]]
-[connection signal="pressed" from="background/VBoxContainer/MLAgent" to="." method="_on_button_pressed" binds= [3]]
+[node name="MultiPlayer" type="VBoxContainer" parent="background" unique_id=968712327]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -216.0
+offset_top = -215.5
+offset_right = 216.0
+offset_bottom = 218.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 44
+
+[node name="Host" type="Button" parent="background/MultiPlayer" unique_id=981321048]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.85455215, 0.43245634, 3.85046e-07, 1)
+theme_override_colors/font_pressed_color = Color(0.18501207, 0.07329429, 1.2032688e-08, 1)
+theme_override_colors/font_hover_color = Color(0.4146426, 0.19603941, 0, 1)
+theme_override_font_sizes/font_size = 99
+text = "Host"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="background/MultiPlayer" unique_id=917766454]
+layout_mode = 2
+alignment = 1
+
+[node name="Join" type="Button" parent="background/MultiPlayer/VBoxContainer" unique_id=1560533982]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.8383309, 0, 0.020577822, 1)
+theme_override_colors/font_pressed_color = Color(0.20995405, 0, 0.0010541477, 1)
+theme_override_colors/font_hover_color = Color(0.40246043, 0, 0.003907351, 1)
+theme_override_font_sizes/font_size = 99
+text = "Join"
+
+[node name="CodeInput" type="LineEdit" parent="background/MultiPlayer/VBoxContainer" unique_id=1023592307]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 35
+placeholder_text = "Enter lobby code here"
+alignment = 1
+
+[node name="Main" type="VBoxContainer" parent="background" unique_id=2090464138]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.5
+offset_top = -242.0
+offset_right = 210.5
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 44
+
+[node name="SinglePlayer" type="Button" parent="background/Main" unique_id=1296703319]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 2
+theme_override_colors/font_color = Color(0.6626204, 0.678125, 0.6420996, 1)
+theme_override_colors/font_pressed_color = Color(0.051454723, 0.12104302, 6.016344e-09, 1)
+theme_override_colors/font_hover_color = Color(0.1255318, 0.24354291, 1.4439226e-07, 1)
+theme_override_font_sizes/font_size = 70
+text = "Singleplayer"
+
+[node name="MultiPlayer" type="Button" parent="background/Main" unique_id=1871001569]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 2
+theme_override_colors/font_color = Color(0.6626204, 0.678125, 0.6420996, 1)
+theme_override_colors/font_pressed_color = Color(0.18501207, 0.07329429, 1.2032688e-08, 1)
+theme_override_colors/font_hover_color = Color(0.4146426, 0.19603941, 0, 1)
+theme_override_font_sizes/font_size = 70
+text = "Multiplayer"
+
+[node name="BackButton" type="Button" parent="background" unique_id=624927004]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -125.0
+offset_top = 37.0
+offset_right = -55.0
+offset_bottom = 180.0
+grow_horizontal = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.051454723, 0.12104302, 6.016344e-09, 1)
+theme_override_colors/font_hover_color = Color(0.1255318, 0.24354291, 1.4439226e-07, 1)
+theme_override_font_sizes/font_size = 99
+theme_override_styles/normal = SubResource("StyleBoxEmpty_h4ed0")
+text = "X"
+
+[connection signal="pressed" from="background/SinglePlayer/Easy" to="." method="_on_button_pressed" binds= [0]]
+[connection signal="pressed" from="background/SinglePlayer/Normal" to="." method="_on_button_pressed" binds= [1]]
+[connection signal="pressed" from="background/SinglePlayer/Hard" to="." method="_on_button_pressed" binds= [2]]
+[connection signal="pressed" from="background/SinglePlayer/MLAgent" to="." method="_on_button_pressed" binds= [3]]
+[connection signal="pressed" from="background/MultiPlayer/Host" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="background/MultiPlayer/VBoxContainer/Join" to="." method="_on_join_button_pressed"]
+[connection signal="text_submitted" from="background/MultiPlayer/VBoxContainer/CodeInput" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="background/Main/SinglePlayer" to="." method="_on_mode_pressed" binds= [0]]
+[connection signal="pressed" from="background/Main/MultiPlayer" to="." method="_on_mode_pressed" binds= [1]]
+[connection signal="pressed" from="background/BackButton" to="." method="_on_back_button_pressed"]
