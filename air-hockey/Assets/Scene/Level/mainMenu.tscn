@@ -178,10 +178,10 @@ theme_override_font_sizes/font_size = 99
 theme_override_styles/normal = SubResource("StyleBoxEmpty_h4ed0")
 text = "X"
 
-[connection signal="pressed" from="background/SinglePlayer/Easy" to="." method="_on_button_pressed" binds= [0]]
-[connection signal="pressed" from="background/SinglePlayer/Normal" to="." method="_on_button_pressed" binds= [1]]
-[connection signal="pressed" from="background/SinglePlayer/Hard" to="." method="_on_button_pressed" binds= [2]]
-[connection signal="pressed" from="background/SinglePlayer/MLAgent" to="." method="_on_button_pressed" binds= [3]]
+[connection signal="pressed" from="background/SinglePlayer/Easy" to="." method="_on_mode_pressed" binds= [0]]
+[connection signal="pressed" from="background/SinglePlayer/Normal" to="." method="_on_mode_pressed" binds= [1]]
+[connection signal="pressed" from="background/SinglePlayer/Hard" to="." method="_on_mode_pressed" binds= [2]]
+[connection signal="pressed" from="background/SinglePlayer/MLAgent" to="." method="_on_mode_pressed" binds= [3]]
 [connection signal="pressed" from="background/MultiPlayer/Host" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="background/MultiPlayer/VBoxContainer/Join" to="." method="_on_join_button_pressed"]
 [connection signal="text_submitted" from="background/MultiPlayer/VBoxContainer/CodeInput" to="." method="_on_join_button_pressed"]
