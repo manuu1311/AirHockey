@@ -1,11 +1,10 @@
 extends Node
 
-@export var model_paths: String='res://Assets/checkpoints/'
+@export var model_paths: String='res://Assets/'
 var params: Array
-#var paths: Array=['model.json','model150.json','model500.json','model600.json']
-#var weights=[0.1,0.2,0.3,0.4]
-var paths: Array=['sacwarmup.json','sac1m.json','sac2m.json','sac3m.json',
-					'sac4m.json']
+#0-20: ar 4, 20-30: ar3, 35-/: ar=2
+var paths: Array=['ppo.json']
+var action_repeat=[2]
 
 func _ready() -> void:
 	for path in paths:
