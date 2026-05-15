@@ -3,8 +3,8 @@ import numpy as np
 import json
 #python training.py --save_model_path=model_second_it --timesteps=50000 resume_model_path=model_second_it --onnx_export_path=model_second_it
 #name of model to convert
-name='sac4m'
-mode='sac'
+name='ppo45m'
+mode='ppo'
 debug=1
 
 #save the weights in json
@@ -39,10 +39,12 @@ def forward(obs, params):
         W2, b2 = np.array(params["action_net.weight"]), np.array(params["action_net.bias"])
 
         Z1 = obs @ W0.T + b0
-        A1 = np.tanh(Z1)
+        #A1 = np.tanh(Z1)
+        A1 = np.maximum(0, Z1)  
 
         Z2 = A1 @ W1.T + b1
-        A2 = np.tanh(Z2)
+        #A2 = np.tanh(Z2)
+        A2 = np.maximum(0, Z2)  
 
         Z3 = A2 @ W2.T + b2
 
@@ -82,8 +84,10 @@ def forward(obs, params):
 
 
 #load model
-model=SAC.load("checkpoints/"+name+".zip")
-
+if mode=='sac':
+    model=SAC.load("checkpoints/"+name+".zip")
+elif mode=='ppo':
+    model=PPO.load("checkpoints/"+name+".zip")
 if debug:
     if mode=='ppo':
         for namep, param in model.policy.named_parameters():
@@ -103,7 +107,7 @@ params = load_weights()
 for i in [13,17,12,0,15,25,111]:
     #random observation
     np.random.seed(i)
-    obs=np.random.random(size=19)
+    obs=np.random.random(size=17)
     obs = {"obs": obs}
     #deterministic predict with sb3
     action, _ = model.predict(obs,deterministic=True)
