@@ -24,7 +24,7 @@ texture = SubResource("CompressedTexture2D_eiiri")
 
 [node name="PaddleN" parent="Table" unique_id=1823900199 instance=ExtResource("2_3gjr4")]
 position = Vector2(-226, 0)
-scale = Vector2(0.12, 0.12)
+scale = Vector2(0.09, 0.09)
 start_position = Vector2(-226, 0)
 player = 1
 ai_flag = true
@@ -43,9 +43,19 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 
 [node name="PaddleS" parent="Table" unique_id=560494842 instance=ExtResource("2_3gjr4")]
 position = Vector2(226, 0)
-scale = Vector2(0.12, 0.12)
+scale = Vector2(0.1, 0.1)
 start_position = Vector2(226, 0)
 puck_path = NodePath("../Puck")
+difficulty = 3
+airl_path = NodePath("AIController2D")
+
+[node name="AIController2D" type="Node2D" parent="Table/PaddleS" unique_id=27257552 node_paths=PackedStringArray("paddle", "opponent", "puck")]
+script = ExtResource("4_xcpoy")
+paddle = NodePath("..")
+opponent = NodePath("../../PaddleN")
+puck = NodePath("../../Puck")
+policy_name = "learner"
+metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 
 [node name="Puck" parent="Table" unique_id=430235678 instance=ExtResource("3_3gjr4")]
 max_contacts_reported = 1
@@ -53,7 +63,7 @@ script = ExtResource("4_y0r01")
 
 [node name="CollisionShape2D" parent="Table/Puck" index="0" unique_id=818533871]
 position = Vector2(4.695, 1.97)
-scale = Vector2(0.11, 0.11)
+scale = Vector2(0.07, 0.07)
 
 [node name="GameManager" type="Node" parent="." unique_id=133710377]
 script = ExtResource("5_86wvc")
