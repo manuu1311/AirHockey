@@ -16,20 +16,22 @@ var last_paddle_pos : Vector2 = Vector2.ZERO
 var opponent_goal_position=Vector2(-1,0.5)
 ###rewards###
 #reward for goal
-@export var goal_reward: float= 3
+@export var goal_reward: float= 1
 #passive reward weight for puck position
-@export var puck_position_weight: float=0.002
-@export var puck_velocity_weight: float=0.002
-@export var passive_weight: float=0.001
-@export var middle_weight:float = 0.002
-@export var puck_distance_weight: float=0.002
-@export var puck_hit_weight: float=0.5
+@export var puck_position_weight: float=0.00
+@export var puck_velocity_weight: float=0.00
+@export var passive_weight: float=0.000
+@export var middle_weight:float = 0.00
+@export var puck_distance_weight: float=0.000
+@export var puck_hit_weight: float=0.0
 @export var inference=true
 @export var timeout:float=60
 var simulated_time := 0.0
 var inference_steps:int=0
 @export var inference_action_repeat:int=5
 var hit_puck:bool=false
+var acc_rew:float=0
+
 
 
 #make observation symmetric
@@ -55,13 +57,19 @@ func _ready():
 	
 func reset_inference():
 	simulated_time=0
+	hit_puck=false
+	acc_rew=0
 	if inference: 
-		inference_id=ModelInference.weighted_random_index([1,1,1,1,1])
+		inference_id=ModelInference.weighted_random_index(
+			[1]
+			)
+		inference_action_repeat=ModelInference.action_repeat[inference_id]
+		inference_steps=0
 		if paddle.debug:
-			print('inferencing with model ',inference_id)
+			print('inferencing with model ',inference_id,', action repeat: ',inference_action_repeat)
 		
 #-- Methods that need implementing using the "extend script" option in Godot --#
-func get_obs() -> Dictionary:
+func get_obs_legacy() -> Dictionary:
 	var obs:Array[float]= []
 
 	# normalised positions
@@ -135,12 +143,13 @@ func get_obs() -> Dictionary:
 	#scaled round time
 	var time_norm = clamp(simulated_time / timeout, 0.0, 1.0)
 	obs.append(time_norm)
-	for elem in obs:
-		if elem>1 or elem<-1:
-			print(obs)
+	for i in range(len(obs)):
+		if obs[i]<-1 or obs[i]>1:
+			print('careful! obs out of bounds.. this is:\n',obs)
+		obs[i]=clamp(obs[i],-1,1)
 	return {"obs": obs}
 
-func get_obs_legacy() -> Dictionary:
+func get_obs() -> Dictionary:
 	var obs:Array[float]= []
 
 	# normalised positions
@@ -186,19 +195,30 @@ func get_obs_legacy() -> Dictionary:
 	# update for next frame
 	last_opponent_pos = opponent.position
 	'''
-
+	
 	# relative positions
 	var rel_puck = (puck.position - paddle.position)
-	obs.append(x_mirrored*rel_puck.x / field_width)
-	obs.append(rel_puck.y / field_height)
+	obs.append(x_mirrored*rel_puck.x / (field_width*2))
+	obs.append(rel_puck.y / (field_height*2))
 	#relative velocities
 	var rel_vel = puck.linear_velocity - paddle.velocity
 	obs.append(x_mirrored*rel_vel.y / (max_puck_speed+max_paddle_speed))
 	obs.append(rel_vel.x / (max_puck_speed+max_paddle_speed))
+
 	
 	#scaled round time
 	var time_norm = clamp(simulated_time / timeout, 0.0, 1.0)
 	obs.append(time_norm)
+	
+	var check=false
+	for i in range(len(obs)):
+		if obs[i]<-1.2 or obs[i]>1.2:
+			print('careful! obs out of bounds.. this is: ',obs)
+			check=true
+		obs[i]=clamp(obs[i],-1,1)
+	if check and GameState.training:
+		print('pucking out..')
+		table.puckout()
 	return {"obs": obs}
 
 func get_reward() -> float:
@@ -220,16 +240,24 @@ func set_action(action) -> void:
 func goal_scored(playerToScore: int, scale_rew:float=1):
 	if player==playerToScore:
 		reward+=goal_reward*scale_rew
+		acc_rew+=goal_reward*scale_rew
 	else:
 		reward-=goal_reward*scale_rew/2
+		acc_rew-=goal_reward*scale_rew/2
+	if paddle.ai_training:
+		print('reward obtained by player ',paddle.player,': ',acc_rew)
+		if acc_rew<-1.5 or acc_rew>4:
+			print('-- reward exceeded! careful! reward is: ',acc_rew)
 	done=true
-	needs_reset=true
-	reset()
 
 #passive reward for puck position (own side or opponent side)
 func puck_position_reward(delta:float):
-	if x_mirrored*puck.position.x/field_width<-0.5 and abs(puck.position.y)/field_height<0.3:
+	#if x_mirrored*puck.position.x/field_width<-0.5 and abs(puck.position.y)/field_height<0.3:
+	if x_mirrored*puck.position.x/field_width<-0.5:
 		reward+=puck_position_weight*delta
+		acc_rew+=puck_position_weight*delta
+	elif x_mirrored*puck.position.x/field_width>0.65:
+		reward-=puck_position_weight*delta
 	'''
 	var sign_r=0
 	if x_mirrored*puck.position.x>=0: 
@@ -241,10 +269,12 @@ func puck_position_reward(delta:float):
 	
 
 func puck_velocity_reward(delta:float):
-	if x_mirrored*puck.position.x/field_width>-0.1 and abs(puck.linear_velocity.length())<50:
-		reward-=puck_velocity_weight
-	elif x_mirrored*puck.linear_velocity.y<-200:
+	#if x_mirrored*puck.position.x/field_width>-0.1 and abs(puck.linear_velocity.length())<50:
+#		reward-=10*puck_velocity_weight*delta
+#		acc_rew-=10*puck_velocity_weight*delta
+	if x_mirrored*puck.linear_velocity.y<-200:
 		reward+=abs(puck.linear_velocity.length())*puck_velocity_weight*delta
+		acc_rew+=abs(puck.linear_velocity.length())*puck_velocity_weight*delta
 	#reward -= x_mirrored * puck.linear_velocity.y*puck_velocity_weight*delta
 	#if puck is stuck in the middle: punish
 	#if abs(last_puck_pos.x)<20 and abs(puck.position.x)<20:
@@ -255,25 +285,28 @@ func puck_velocity_reward(delta:float):
 func passive_reward(delta:float):
 	simulated_time+=delta
 	reward-=passive_weight*delta
+	acc_rew-=passive_weight*delta
 	
 func middle_reward(delta:float):
 	var pos= x_mirrored*paddle.position.x / field_width
 	if pos<0.35:
 		reward-=middle_weight*delta
+		acc_rew-=middle_weight*delta
 
 func puck_distance_reward(delta:float):
 	var rel_puck = (puck.position - paddle.position)
 	var dist = rel_puck.length()/(field_width*2)
-	reward +=puck_distance_weight*(1-dist)*delta
+	reward -=puck_distance_weight*dist*delta
+	acc_rew -=puck_distance_weight*dist*delta
 	
 func puck_hit_reward():
 	if hit_puck==false:
 		reward+=puck_hit_weight
+		acc_rew+=puck_hit_weight
 		hit_puck=true
-		print('hit puck first!')
 	else:
-		reward+=puck_hit_weight/100
-		print('hit puck NOT first!')
+		reward+=puck_hit_weight/50
+		acc_rew+=puck_hit_weight/50
 	
 	
 #handle action computation
@@ -292,58 +325,64 @@ func inference_predict():
 	return forward(get_obs(),ModelInference.params[inference_id])
 	
 #define basic mlp functions
-func matvec(W, x):
-	var out = []
-	for i in range(W.size()): # rows
-		var sum = 0.0
+func linear(W: Array, b: PackedFloat32Array, x: PackedFloat32Array, out_size: int) -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	out.resize(out_size)
+	for i in range(out_size):
+		var row: PackedFloat32Array = W[i]
+		var sum: float = b[i]
 		for j in range(x.size()):
-			sum += W[i][j] * x[j]
-		out.append(sum)
+			sum += row[j] * x[j]
+		out[i] = sum
 	return out
 
 
-func add_bias(v, b):
-	var out = []
+func tanh_vec(v: PackedFloat32Array) -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	out.resize(v.size())
 	for i in range(v.size()):
-		out.append(v[i] + b[i])
-	return out
-
-
-func tanh_vec(v):
-	var out = []
-	for i in range(v.size()):
-		out.append(tanh(v[i]))
+		out[i] = tanh(v[i])
 	return out
 	
-func relu_vec(v):
-	var out = []
-	for i in range(v.size()):
-		out.append(max(0.0, v[i]))
+func linear_relu(W: Array, b: PackedFloat32Array, x: PackedFloat32Array, out_size: int) -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	out.resize(out_size)
+	for i in range(out_size):
+		var row: PackedFloat32Array = W[i]
+		var sum: float = b[i]
+		for j in range(x.size()):
+			sum += row[j] * x[j]
+		out[i] = sum if sum > 0.0 else 0.0
 	return out
 	
 func forward(obs, params):
-	var x = obs["obs"]  # should be size 23
+	var x := PackedFloat32Array(obs["obs"]) 
 
-	# Layer 0: 19 -> 256
-	var W0 = params["latent_pi.0.weight"]
-	var b0 = params["latent_pi.0.bias"]
-	var h0 = relu_vec(add_bias(matvec(W0, x), b0))
+	# Layer 0: 17 -> 256
+	var W0 = params["mlp_extractor.policy_net.0.weight"]
+	var b0 = params["mlp_extractor.policy_net.0.bias"]
+	#var h0 = relu_vec(add_bias(matvec(W0, x), b0))
+	var h0 := linear_relu(W0, b0, x, 128)
 
 	# Layer 1: 256 -> 256
-	var W1 = params["latent_pi.2.weight"]
-	var b1 = params["latent_pi.2.bias"]
-	var h1 = relu_vec(add_bias(matvec(W1, h0), b1))
+	var W1 = params["mlp_extractor.policy_net.2.weight"]
+	var b1 = params["mlp_extractor.policy_net.2.bias"]
+	var h1 := linear_relu(W1, b1, h0, 128)
+	
 
-	# Output (mu): 128 -> 2
-	var W_mu = params["mu.weight"]
-	var b_mu = params["mu.bias"]
-	var mu = add_bias(matvec(W_mu, h1), b_mu)
+	# Output (mu): 256 -> 2
+	var W2 = params["action_net.weight"]
+	var b2 = params["action_net.bias"]
+	var z3 := linear(W2, b2, h1, 2)
 
 	# Deterministic action (SAC uses tanh squashing)
-	var action = tanh_vec(mu)
+	#var action = tanh_vec(mu)
+	var action=[]
+	for a in z3:
+		action.append(clamp(a, -1.0, 1.0))
 
 	return action
-
+'''
 #inference
 func forward_ppo(obs,params):
 	var W0 = params["mlp_extractor.policy_net.0.weight"]
@@ -371,7 +410,7 @@ func forward_ppo(obs,params):
 	for x in z3:
 		action.append(clamp(x, -1.0, 1.0))
 	return action
-	
+'''
 
 
 func _on_puck_body_entered(body: Node) -> void:

@@ -31,13 +31,15 @@ var attack_threshold:=500
 #rl agent
 @export var airl_path: NodePath 
 var airl: Node2D
-var airl_speed:float =1000
+var airl_speed:float =850
 @export var ai_training:bool
 
 
 func _ready() -> void:
+	airl=get_node(airl_path)
 	home_position=to_global(start_position)
-	print('player: ',player)
+	if debug:
+		print('player: ',player)
 	global_goal_line=home_position.y-100
 	middle_line=home_position.y+284
 	alt_goal_width=80
@@ -56,7 +58,7 @@ func _ready() -> void:
 		reaction_time=0.1
 	elif difficulty==4:
 		#random dummy movements
-		var weights=[0.5,1,1]
+		var weights=[1,1,5,20]
 		var id =weighted_random_index(weights)
 		if id==0:
 			handle_ai = Callable(self, "handle_ai_dummy")
@@ -68,16 +70,18 @@ func _ready() -> void:
 			handle_ai = Callable(self, "handle_ai_still")
 			
 	if difficulty==3 or ai_training:
-		print('handle rl!')
+		if debug:
+			print('handle rl!')
 		handle_ai = Callable(self, "handle_ai_rl")
-		airl=get_node(airl_path)
 		airl.init(self)
 	
 func new_difficulty():
-	print('changing difficulty..')
-	var weights=[1,3,5,1,10]
+	if debug:
+		print('changing difficulty..')
+	var weights=[0,0,0,0,30]
 	difficulty =weighted_random_index(weights)
-	print('difficulty changed to: ',difficulty)
+	if debug:
+		print('difficulty changed to: ',difficulty)
 	if difficulty == 0:
 		handle_ai = Callable(self, "handle_ai_easy")
 	elif difficulty == 1:
@@ -89,8 +93,9 @@ func new_difficulty():
 		reaction_time=0.1
 	elif difficulty==3:
 		#random dummy movements
-		weights=[3,1,1]
+		weights=[0,0,0,2]
 		var id =weighted_random_index(weights)
+		print('id is: ',id)
 		if id==0:
 			handle_ai = Callable(self, "handle_ai_dummy")
 		elif id==1:
@@ -99,6 +104,8 @@ func new_difficulty():
 			timer=0.15
 		elif id==2:
 			handle_ai = Callable(self, "handle_ai_still")
+		elif id==3:
+			handle_ai = Callable(self, "handle_ai_random")
 	
 	elif difficulty==4:
 		handle_ai = Callable(self, "handle_ai_rl")
@@ -109,9 +116,8 @@ func reset(timeout=false):
 	last_target=position	
 	velocity=Vector2(0,0)
 	if ai_training:
-		print('reward obtained by player ',player,': ',airl.reward)
 		if timeout:
-			airl.goal_scored(2,1)
+			airl.goal_scored(2,0.5)
 	if airl!=null:
 		airl.reset_inference()
 	#if training, choose a random new difficulty
@@ -196,7 +202,7 @@ func handle_ai_normal(delta):
 			
 			var prediction_time = 0.3
 			var predicted_pos = puck.global_position + puck.linear_velocity * prediction_time
-			if puck.global_position.y < middle_line-50:
+			if puck.global_position.y < middle_line-30:
 				# DEFEND
 				last_target = predicted_pos
 			else:
@@ -232,7 +238,7 @@ func handle_ai_hard(delta):
 			if is_coming:
 				var time = (global_goal_line - puck_pos.y) / puck_vel.y
 				#out of reaction time: be careful!
-				if time<delta_dangerous or position.y>puck_pos.y:
+				if time<delta_dangerous or global_position.y>puck_pos.y:
 					is_dangerous=true
 					#predict where puck is coming
 					predicted_x = puck_pos.x + puck_vel.x * time
@@ -250,7 +256,7 @@ func handle_ai_hard(delta):
 			#if puck is in own field AND behind own paddle AND
 			#is not going towards the opponent field "too fast" 
 			#															add offset for zero division
-			elif puck_pos.y<middle_line-50 and puck_pos.y>position.y and abs(puck_vel.y) < attack_threshold:
+			elif puck_pos.y<middle_line-50 and puck_pos.y>global_position.y and abs(puck_vel.y) < attack_threshold:
 				# ATTACK
 				if debug:
 					print('attacking!')
@@ -275,9 +281,10 @@ func handle_ai_hard(delta):
 	
 			
 func handle_ai_rl(_delta):
-	var move=airl.get_action()
-	velocity.x=move.x*airl_speed
-	velocity.y=move.y*airl_speed*airl.x_mirrored
+	if unlocked:
+		var move=airl.get_action()
+		velocity.x=move.y*airl_speed
+		velocity.y=move.x*airl_speed*airl.x_mirrored
 	
 #periodically give reward to agent depending on puck position
 func puck_position_rew(delta:float):
@@ -344,3 +351,14 @@ func handle_ai_stupid(delta):
 		
 func handle_ai_still(_delta):
 	return
+	
+func handle_ai_random(delta):
+	timer += delta
+	if timer >= 3*reaction_time:
+		timer = 0.0
+		var move = Vector2(
+				randf_range(-500, 500), 
+				randf_range(-500, 500)  
+			)
+		velocity.x=move.x
+		velocity.y=move.y

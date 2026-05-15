@@ -32,7 +32,14 @@ func _integrate_forces(state):
 	if should_reset:
 		state.linear_velocity = Vector2.ZERO
 		state.angular_velocity = 0
-		state.transform.origin = get_parent().to_global(startingPos)
+		if GameState.training:
+			var offset = Vector2(
+				randf_range(-300, 300), 
+				randf_range(-150, 150)  
+			)
+			state.transform.origin = get_parent().to_global(startingPos+offset)
+		else:
+			state.transform.origin = get_parent().to_global(startingPos)
 		show()
 		#set_deferred("process_mode", Node.PROCESS_MODE_INHERIT)
 		should_reset = false
