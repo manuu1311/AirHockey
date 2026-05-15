@@ -30,11 +30,11 @@ position = Vector2(1705, -1276)
 position = Vector2(2594, -1309)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=501292274]
-position = Vector2(1680, -365)
-zoom = Vector2(0.26, 0.26)
+position = Vector2(1680, -260)
+zoom = Vector2(0.2, 0.2)
 
 [node name="Sync" type="Node" parent="." unique_id=264584727]
 script = ExtResource("9_lcfdc")
-action_repeat = 5
+action_repeat = 2
 speed_up = 5.0
 metadata/_custom_type_script = "uid://dwc001u0axl10"
