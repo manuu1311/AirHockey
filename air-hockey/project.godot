@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 
 GameState="*uid://ce3j1n0kac1th"
 ModelInference="*uid://vykgb4wfixl3"
+Signaling="*uid://dmd4k715uf8gh"
+WebRtcManager="*uid://dtm4o77dwg5wo"
 
 [display]
 

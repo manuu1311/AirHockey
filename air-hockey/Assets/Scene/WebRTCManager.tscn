@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ce1l1enodxa21"]
+
+[ext_resource type="Script" uid="uid://dtm4o77dwg5wo" path="res://Scripts/web_rtc_manager.gd" id="1_yv8pt"]
+
+[node name="WebRtcManager" type="Node2D" unique_id=1079766707]
+script = ExtResource("1_yv8pt")

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cfc57oe78m02"]
+
+[ext_resource type="Script" uid="uid://dmd4k715uf8gh" path="res://Scripts/signaling.gd" id="1_0koka"]
+
+[node name="Signaling" type="Node2D" unique_id=1210957548]
+script = ExtResource("1_0koka")

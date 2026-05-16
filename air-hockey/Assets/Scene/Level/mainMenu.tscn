@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://buk5w0winnywt"]
 
 [ext_resource type="Script" uid="uid://crmg4vo825wfw" path="res://Assets/Scene/Level/main_menu.gd" id="1_h4ed0"]
+[ext_resource type="Script" uid="uid://dgn8ege5rmjif" path="res://Scripts/lobby.gd" id="2_dkj3m"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h4ed0"]
 
@@ -79,6 +80,7 @@ theme_override_font_sizes/font_size = 99
 text = "MLAgent"
 
 [node name="MultiPlayer" type="VBoxContainer" parent="background" unique_id=968712327]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -178,10 +180,30 @@ theme_override_font_sizes/font_size = 99
 theme_override_styles/normal = SubResource("StyleBoxEmpty_h4ed0")
 text = "X"
 
-[connection signal="pressed" from="background/SinglePlayer/Easy" to="." method="_on_mode_pressed" binds= [0]]
-[connection signal="pressed" from="background/SinglePlayer/Normal" to="." method="_on_mode_pressed" binds= [1]]
-[connection signal="pressed" from="background/SinglePlayer/Hard" to="." method="_on_mode_pressed" binds= [2]]
-[connection signal="pressed" from="background/SinglePlayer/MLAgent" to="." method="_on_mode_pressed" binds= [3]]
+[node name="CodeLabel" type="Label" parent="background" unique_id=973505337]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -11.5
+offset_right = 40.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 60
+text = "Your room code"
+horizontal_alignment = 1
+
+[node name="Lobby" type="Node" parent="." unique_id=778537348]
+script = ExtResource("2_dkj3m")
+
+[connection signal="pressed" from="background/SinglePlayer/Easy" to="." method="_on_difficulty_pressed" binds= [0]]
+[connection signal="pressed" from="background/SinglePlayer/Normal" to="." method="_on_difficulty_pressed" binds= [1]]
+[connection signal="pressed" from="background/SinglePlayer/Hard" to="." method="_on_difficulty_pressed" binds= [2]]
+[connection signal="pressed" from="background/SinglePlayer/MLAgent" to="." method="_on_difficulty_pressed" binds= [3]]
 [connection signal="pressed" from="background/MultiPlayer/Host" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="background/MultiPlayer/VBoxContainer/Join" to="." method="_on_join_button_pressed"]
 [connection signal="text_submitted" from="background/MultiPlayer/VBoxContainer/CodeInput" to="." method="_on_join_button_pressed"]
