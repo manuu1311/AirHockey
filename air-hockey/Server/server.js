@@ -3,7 +3,7 @@ const crypto = require("crypto");
 
 const MAX_PEERS = 4096;
 const MAX_LOBBIES = 1024;
-process.env.PORT || 9080;
+const PORT = process.env.PORT || 9080;
 const ALFNUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 const NO_LOBBY_TIMEOUT = 1000;
