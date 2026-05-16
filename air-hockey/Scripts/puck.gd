@@ -21,6 +21,7 @@ func reset():
 	should_reset=true
 	show()
 	sleeping = false
+		
 #apply initial velocity
 func apply_initial_force(player:int):
 	call_deferred("_apply_force_deferred", player)
@@ -35,12 +36,19 @@ func disappear():
 	linear_velocity = Vector2.ZERO
 	angular_velocity = 0
 	hide()
+	
+func _physics_process(_delta):
+	if GameState.isMultiplayer and is_multiplayer_authority():
+		# host broadcasts every frame
+		sync_puck.rpc(global_position, linear_velocity, angular_velocity)
+
 func _integrate_forces(state):
 	if _should_sync:
 		state.transform.origin = _remote_pos
 		state.linear_velocity = _remote_vel
 		state.angular_velocity = _remote_ang_vel
 		_should_sync = false
+		
 	
 	if not GameState.isMultiplayer or is_multiplayer_authority():
 		if should_reset:
@@ -65,16 +73,12 @@ func _integrate_forces(state):
 			should_apply_vel=false
 	
 	
-func _physics_process(_delta):
-	if GameState.isMultiplayer and is_multiplayer_authority():
-		# host broadcasts every frame
-		sync_puck.rpc(global_position, linear_velocity, angular_velocity)	
 
-@rpc("authority", "call_remote", "unreliable_ordered")
+@rpc("authority", "call_remote", "unreliable")
 func sync_puck(pos: Vector2, vel: Vector2, ang_vel: float):
-	# client: apply via _integrate_forces flags
-	_remote_pos = pos
-	_remote_vel = vel
+	var diff : Vector2=pos-Vector2(400,450)
+	_remote_pos = Vector2(400,450)-diff
+	_remote_vel = Vector2(-vel.x, -vel.y)
 	_remote_ang_vel = ang_vel
 	_should_sync = true
 		

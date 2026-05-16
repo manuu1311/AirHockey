@@ -56,9 +56,14 @@ func multiplayer_aiflag_paddles():
 	puck.set_multiplayer_authority(1)
 	southPaddle.set_multiplayer_authority(1)
 	northPaddle.set_multiplayer_authority(client_id)
+	if northPaddle.is_multiplayer_authority():
+		table.rotation_degrees += 180
 	
 #routine after reset button is clicked
 func onResetButton():
+	#only host can reset
+	if GameState.isMultiplayer and not WebRtcManager._is_host:
+		return
 	if GameState.game_state==GameState.GameStates.ENDED or GameState.training==true:
 		playerScores=[0,0]
 		ui.UpdateScore(playerScores)
@@ -100,18 +105,30 @@ func IncreaseScore(player: int):
 	
 #function called on signal emitted from goal lines
 func GoalScored(player:int):
+	#do nothing on client
+	if GameState.isMultiplayer and not WebRtcManager._is_host:
+		return
 	playerPuckVel = 1 if player == 1 else -1
 	if GameState.game_state==GameState.GameStates.PLAYING:
 		IncreaseScore(player)
 		puck.disappear()
-		if playerScores[player]>=winScore:
-			print("Player %d won the game",player)
-			GameState.game_state=GameState.GameStates.ENDED
-			ui.endGame(player)
-			puck.reset()
+		if playerScores[player] >= winScore:
+			sync_goal_scored.rpc(player, playerScores, true)
 		else:
-			newPoint()
+			sync_goal_scored.rpc(player, playerScores, false)
 	
+@rpc("authority", "call_local", "reliable")
+func sync_goal_scored(player: int, scores: Array, game_over: bool):
+	playerScores = scores
+	ui.UpdateScore(playerScores)
+	puck.disappear()
+	if game_over:
+		GameState.game_state = GameState.GameStates.ENDED
+		ui.endGame(player)
+		puck.reset()
+	else:
+		newPoint()
+		
 #reset table and start new point
 func newPoint():
 	if not GameState.training:

@@ -43,7 +43,7 @@ metadata/_custom_type_script = "uid://p26yw7jrrnqk"
 
 [node name="PaddleS" parent="Table" unique_id=560494842 instance=ExtResource("2_3gjr4")]
 position = Vector2(226, 0)
-scale = Vector2(0.1, 0.1)
+scale = Vector2(0.09, 0.09)
 start_position = Vector2(226, 0)
 puck_path = NodePath("../Puck")
 difficulty = 3

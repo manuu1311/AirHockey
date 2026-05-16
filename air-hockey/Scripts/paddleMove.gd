@@ -125,6 +125,8 @@ func reset(timeout=false):
 	if GameState.training:
 		if not ai_training:
 			new_difficulty()
+	if GameState.isMultiplayer and is_multiplayer_authority():
+		sync_position.rpc(position)
 	
 	'''
 	if ai_flag:
@@ -186,10 +188,14 @@ func handle_player(delta):
 			if GameState.isMultiplayer:
 				sync_target.rpc(velocity)
 			
-@rpc("authority", "call_remote", "unreliable_ordered")
+@rpc("authority", "call_remote", "unreliable")
 func sync_target(target: Vector2):
-	#global_position = pos
-	velocity = target
+	velocity = Vector2(-target.x,-target.y)
+	
+@rpc("authority", "call_remote", "reliable")
+func sync_position(pos: Vector2):
+	position = Vector2(pos.x, pos.y)
+	velocity=Vector2.ZERO
 	
 	
 #handle ai movement
