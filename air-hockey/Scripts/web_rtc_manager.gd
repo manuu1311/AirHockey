@@ -11,26 +11,33 @@ var _rtc := WebRTCMultiplayerPeer.new()
 var _peers := {}   # id -> WebRTCPeerConnection
 var _my_id := 0
 var _is_host := false
+var _pending_client := false
 
 func setup_host():
 	_is_host = true
 	_rtc.create_server()
 	multiplayer.multiplayer_peer = _rtc
+	multiplayer.peer_connected.connect(_on_rtc_peer_connected)
 	_connect_signaling()
 
 func setup_client():
 	_is_host = false
-	_rtc.create_client(2)  # host is always peer id 1 in WebRTCMultiplayerPeer
-	multiplayer.multiplayer_peer = _rtc
+	_pending_client = true
 	_connect_signaling()
 
 func _connect_signaling():
-	Signaling.connected.connect(_on_connected)
-	Signaling.peer_connected.connect(_on_peer_connected)
-	Signaling.peer_disconnected.connect(_on_peer_disconnected)
-	Signaling.offer_received.connect(_on_offer_received)
-	Signaling.answer_received.connect(_on_answer_received)
-	Signaling.candidate_received.connect(_on_candidate_received)
+	if not Signaling.connected.is_connected(_on_connected):
+		Signaling.connected.connect(_on_connected)
+	if not Signaling.peer_connected.is_connected(_on_peer_connected):
+		Signaling.peer_connected.connect(_on_peer_connected)
+	if not Signaling.peer_disconnected.is_connected(_on_peer_disconnected):
+		Signaling.peer_disconnected.connect(_on_peer_disconnected)
+	if not Signaling.offer_received.is_connected(_on_offer_received):
+		Signaling.offer_received.connect(_on_offer_received)
+	if not Signaling.answer_received.is_connected(_on_answer_received):
+		Signaling.answer_received.connect(_on_answer_received)
+	if not Signaling.candidate_received.is_connected(_on_candidate_received):
+		Signaling.candidate_received.connect(_on_candidate_received)
 
 func _create_peer(id: int) -> WebRTCPeerConnection:
 	var peer := WebRTCPeerConnection.new()
@@ -44,12 +51,23 @@ func _create_peer(id: int) -> WebRTCPeerConnection:
 func _on_connected(id: int):
 	_my_id = id
 	print("My signaling ID: ", id)
+	if _pending_client:
+		_pending_client = false
+		_rtc.create_client(id)
+		multiplayer.multiplayer_peer = _rtc
+		multiplayer.peer_connected.connect(_on_rtc_peer_connected)
+
+func _on_rtc_peer_connected(id: int):
+	print("RTC data channel open with peer: ", id)
+	if _is_host:
+		Signaling.seal_lobby()
+	emit_signal("game_ready")
 
 func _on_peer_connected(id: int):
 	print("Peer connected to signaling: ", id)
-	var peer = _create_peer(id)
 	if _is_host:
 		# Host initiates the offer
+		var peer = _create_peer(id)
 		peer.create_offer()
 
 func _on_peer_disconnected(id: int):
@@ -70,7 +88,7 @@ func _on_candidate_received(id: int, mid: String, index: int, sdp: String):
 	if _peers.has(id):
 		_peers[id].add_ice_candidate(mid, index, sdp)
 
-func _on_sdp_created(sdp: String, type: String, id: int):
+func _on_sdp_created(type: String, sdp: String, id: int):
 	_peers[id].set_local_description(type, sdp)
 	if type == "offer":
 		Signaling.send_offer(id, sdp)
@@ -105,9 +123,4 @@ func leave():
 
 func _process(_delta):
 	if multiplayer.multiplayer_peer != null:
-		# Check if WebRTC connection is fully up
-		if _rtc.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
-			if not _peers.is_empty():
-				emit_signal("game_ready")
-				# Disconnect to avoid spamming
-				set_process(false)
+		_rtc.poll()

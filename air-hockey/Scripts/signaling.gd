@@ -18,7 +18,8 @@ var lobby := ""
 func connect_to_url(url: String):
 	close()
 	_ws = WebSocketPeer.new()
-	_ws.connect_to_url(url)
+	var tls_options = TLSOptions.client()
+	_ws.connect_to_url(url, tls_options)
 	_status = WebSocketPeer.STATE_CONNECTING
 
 func close():
@@ -31,14 +32,16 @@ func join_lobby(p_lobby: String):
 func seal_lobby():
 	_ws.send_text("S: \n")
 
-func send_candidate(id, mid, index, sdp):
-	_send_msg("C", id, "\n%s\n%d\n%s" % [mid, index, sdp])
+func send_offer(id: int, offer: String):
+	_ws.send_text("O: %d\n%s" % [id, offer])
 
-func send_offer(id, offer):
-	_send_msg("O", id, offer)
+func send_answer(id: int, answer: String):
+	_ws.send_text("A: %d\n%s" % [id, answer])
 
-func send_answer(id, answer):
-	_send_msg("A", id, answer)
+func send_candidate(id: int, mid: String, index: int, sdp: String):
+	# Pack the candidate data into the payload
+	_ws.send_text("C: %d\n%s" % [id, JSON.stringify({"mid": mid, "index": index, "sdp": sdp})])
+
 
 func _send_msg(type: String, id: int, data: String):
 	_ws.send_text("%s: %d\n%s" % [type, id, data])
@@ -56,7 +59,12 @@ func _process(_delta):
 			if autojoin:
 				join_lobby(lobby)
 		elif _status == WebSocketPeer.STATE_CLOSED:
-			print("WebSocket closed. Code: ", _ws.get_close_code(), " Reason: ", _ws.get_close_reason())
+			var code = _ws.get_close_code()
+			var reason = _ws.get_close_reason()
+			print("WebSocket closed. Code: ", code, " Reason: '", reason, "'")
+			if code <= 0:
+				print("WARNING: Possible TLS or network failure - never reached server")
+	
 			emit_signal("disconnected")
 
 	while _status == WebSocketPeer.STATE_OPEN and _ws.get_available_packet_count() > 0:
@@ -65,34 +73,38 @@ func _process(_delta):
 		_parse_msg(msg)
 
 func _parse_msg(pkt_str: String):
-	var req := pkt_str.split("\n", true, 1)
-	if req.size() != 2:
+	# Server messages look like:  "I: 123\n"  "J: lobbyname\n"  "N: 456\n"  etc.
+	var lines = pkt_str.strip_edges().split("\n", false)
+	if lines.is_empty():
 		return
-	var type := req[0]
-	if type.length() < 3:
+	var header = lines[0]
+	if header.length() < 3:
 		return
-	if type.begins_with("J: "):
-		emit_signal("lobby_joined", type.substr(3))
-		return
-	elif type.begins_with("S: "):
-		emit_signal("lobby_sealed")
-		return
-	var src_str := type.substr(3)
-	if not src_str.is_valid_int():
-		return
-	var src_id := int(src_str)
-	if type.begins_with("I: "):
-		emit_signal("connected", src_id)
-	elif type.begins_with("N: "):
-		emit_signal("peer_connected", src_id)
-	elif type.begins_with("D: "):
-		emit_signal("peer_disconnected", src_id)
-	elif type.begins_with("O: "):
-		emit_signal("offer_received", src_id, req[1])
-	elif type.begins_with("A: "):
-		emit_signal("answer_received", src_id, req[1])
-	elif type.begins_with("C: "):
-		var candidate := req[1].split("\n", false)
-		if candidate.size() != 3 or not candidate[1].is_valid_int():
-			return
-		emit_signal("candidate_received", src_id, candidate[0], int(candidate[1]), candidate[2])
+	var cmd = header.substr(0, 1)      # "I", "J", "N", "D", "S", "O", "A", "C"
+	var payload = header.substr(3).strip_edges()  # everything after "X: "
+	var body = ""
+	if lines.size() > 1:
+		body = "\n".join(lines.slice(1))
+
+	match cmd:
+		"I":  # Server assigned us an ID
+			emit_signal("connected", int(payload))
+		"J":  # Lobby join confirmed
+			emit_signal("lobby_joined", payload)
+		"N":  # New peer in lobby
+			emit_signal("peer_connected", int(payload))
+		"D":  # Peer disconnected
+			emit_signal("peer_disconnected", int(payload))
+		"S":  # Lobby sealed
+			emit_signal("lobby_sealed")
+		"O":  # Offer relayed
+			emit_signal("offer_received", int(payload), body)
+		"A":  # Answer relayed
+			emit_signal("answer_received", int(payload), body)
+		"C":  # ICE candidate relayed
+			var candidate = JSON.parse_string(body)
+			if candidate == null:
+				return
+			emit_signal("candidate_received", int(payload),
+				candidate["mid"], candidate["index"], candidate["sdp"])
+				
