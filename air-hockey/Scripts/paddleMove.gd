@@ -111,6 +111,7 @@ func new_difficulty():
 		handle_ai = Callable(self, "handle_ai_rl")
 		
 func reset(timeout=false):
+	print('player: ',player,' authority: ',is_multiplayer_authority(),' id: ',multiplayer.get_unique_id())
 	unlocked=false
 	position= start_position
 	last_target=position	
@@ -175,12 +176,22 @@ func _physics_process(delta):
 			
 #player input handler
 func handle_player(delta):
-	var mouse_pos = get_global_mouse_position()
-	if not unlocked:
-		if collision_shape.shape.get_rect().has_point(to_local(mouse_pos)):
-			unlocked=true
-	else:
-		velocity = (mouse_pos - global_position) / delta
+	if is_multiplayer_authority():
+		var mouse_pos = get_global_mouse_position()
+		if not unlocked:
+			if collision_shape.shape.get_rect().has_point(to_local(mouse_pos)):
+				unlocked=true
+		else:
+			velocity = (mouse_pos - global_position) / delta
+			if GameState.isMultiplayer:
+				sync_target.rpc(velocity)
+			
+@rpc("authority", "call_remote", "unreliable_ordered")
+func sync_target(target: Vector2):
+	#global_position = pos
+	velocity = target
+	
+	
 #handle ai movement
 func handle_ai_easy(delta):
 	if unlocked:

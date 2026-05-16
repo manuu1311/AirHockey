@@ -37,7 +37,26 @@ func _ready():
 	print('difficulty: ',GameState.difficulty)
 	playerPuckVel=1
 	ResetBoard()
-
+	#set multiplayer authorities
+	if GameState.isMultiplayer:
+		if WebRtcManager._is_host:
+			multiplayer_aiflag_paddles.rpc()
+			
+	
+@rpc("authority", "call_local", "reliable")
+func multiplayer_aiflag_paddles():
+	northPaddle.ai_flag=false
+	southPaddle.ai_flag=false
+	var client_id:=0
+	if WebRtcManager._is_host:
+		client_id = multiplayer.get_peers()[0]
+	else:
+		client_id = multiplayer.get_unique_id()
+	print(client_id)
+	puck.set_multiplayer_authority(1)
+	southPaddle.set_multiplayer_authority(1)
+	northPaddle.set_multiplayer_authority(client_id)
+	
 #routine after reset button is clicked
 func onResetButton():
 	if GameState.game_state==GameState.GameStates.ENDED or GameState.training==true:

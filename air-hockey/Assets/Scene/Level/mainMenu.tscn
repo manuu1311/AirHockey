@@ -180,22 +180,27 @@ theme_override_font_sizes/font_size = 99
 theme_override_styles/normal = SubResource("StyleBoxEmpty_h4ed0")
 text = "X"
 
-[node name="CodeLabel" type="Label" parent="background" unique_id=973505337]
+[node name="CodeLabel" type="Button" parent="background" unique_id=35054688]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -40.0
-offset_top = -11.5
-offset_right = 40.0
-offset_bottom = 11.5
+offset_left = -35.0
+offset_top = -71.5
+offset_right = 35.0
+offset_bottom = 71.5
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(0.59856504, 0.603125, 0.5937011, 1)
 theme_override_font_sizes/font_size = 60
-text = "Your room code"
-horizontal_alignment = 1
+theme_override_styles/normal = SubResource("StyleBoxEmpty_h4ed0")
+text = "Room code"
 
 [node name="Lobby" type="Node" parent="." unique_id=778537348]
 script = ExtResource("2_dkj3m")
@@ -210,3 +215,4 @@ script = ExtResource("2_dkj3m")
 [connection signal="pressed" from="background/Main/SinglePlayer" to="." method="_on_mode_pressed" binds= [0]]
 [connection signal="pressed" from="background/Main/MultiPlayer" to="." method="_on_mode_pressed" binds= [1]]
 [connection signal="pressed" from="background/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="background/CodeLabel" to="." method="_on_code_label_pressed"]
