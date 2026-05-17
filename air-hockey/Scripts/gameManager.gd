@@ -37,7 +37,7 @@ func _ready():
 	ResetBoard()
 	#set multiplayer authorities
 	if GameState.isMultiplayer:
-		if WebRtcManager._is_host:
+		if WebRtcManager.is_host:
 			multiplayer_aiflag_paddles.rpc()
 			
 	
@@ -46,7 +46,7 @@ func multiplayer_aiflag_paddles():
 	northPaddle.ai_flag=false
 	southPaddle.ai_flag=false
 	var client_id:=0
-	if WebRtcManager._is_host:
+	if WebRtcManager.is_host:
 		client_id = multiplayer.get_peers()[0]
 	else:
 		client_id = multiplayer.get_unique_id()
@@ -61,7 +61,7 @@ func multiplayer_aiflag_paddles():
 #routine after reset button is clicked
 func onResetButton():
 	#only host can reset
-	if GameState.isMultiplayer and not WebRtcManager._is_host:
+	if GameState.isMultiplayer and not WebRtcManager.is_host:
 		return
 	if GameState.game_state==GameState.GameStates.ENDED or GameState.training==true:
 		playerScores=[0,0]
@@ -110,7 +110,7 @@ func IncreaseScore(player: int):
 #function called on signal emitted from goal lines
 func GoalScored(player:int):
 	#do nothing on client
-	if GameState.isMultiplayer and not WebRtcManager._is_host:
+	if GameState.isMultiplayer and not WebRtcManager.is_host:
 		return
 	playerPuckVel = 1 if player == 1 else -1
 	if GameState.game_state==GameState.GameStates.PLAYING:
@@ -125,7 +125,7 @@ func GoalScored(player:int):
 @rpc("authority", "call_local", "reliable")
 func sync_goal_scored(player: int, scores: Array, game_over: bool):
 	playerScores = scores
-	if WebRtcManager._is_host:
+	if WebRtcManager.is_host:
 		ui.UpdateScore(playerScores)
 	else:
 		ui.UpdateScore([playerScores[1],playerScores[0]])
@@ -139,7 +139,7 @@ func sync_goal_scored(player: int, scores: Array, game_over: bool):
 		
 #reset table and start new point
 func newPoint():
-	if WebRtcManager._is_host:
+	if WebRtcManager.is_host:
 		if not GameState.training:
 			await get_tree().create_timer(2).timeout
 		ResetBoard.rpc()

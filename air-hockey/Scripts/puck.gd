@@ -22,7 +22,6 @@ var maxspeed := 2000
 func _ready() -> void:
 	startingPos = position
 	can_sleep = false
-	print('host: ', WebRtcManager._is_host, ' puckpos: ', global_position)
 
 
 func reset():

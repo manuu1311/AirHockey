@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://buk5w0winnywt"]
 
 [ext_resource type="Script" uid="uid://crmg4vo825wfw" path="res://Assets/Scene/Level/main_menu.gd" id="1_h4ed0"]
-[ext_resource type="Script" uid="uid://dgn8ege5rmjif" path="res://Scripts/lobby.gd" id="2_dkj3m"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h4ed0"]
 
@@ -202,9 +201,6 @@ theme_override_colors/font_hover_color = Color(0.59856504, 0.603125, 0.5937011, 
 theme_override_font_sizes/font_size = 60
 theme_override_styles/normal = SubResource("StyleBoxEmpty_h4ed0")
 text = "Room code"
-
-[node name="Lobby" type="Node" parent="." unique_id=778537348]
-script = ExtResource("2_dkj3m")
 
 [connection signal="pressed" from="background/SinglePlayer/Easy" to="." method="_on_difficulty_pressed" binds= [0]]
 [connection signal="pressed" from="background/SinglePlayer/Normal" to="." method="_on_difficulty_pressed" binds= [1]]
