@@ -6,6 +6,7 @@ extends Node
 @export var southPaddlePath: NodePath
 @export var uiPath: NodePath
 @export var tablePath: NodePath
+@onready var camera_2d: Camera2D = $"../Camera2D"
 
 
 var puck
@@ -57,7 +58,8 @@ func multiplayer_aiflag_paddles():
 	southPaddle.set_multiplayer_authority(1)
 	northPaddle.set_multiplayer_authority(client_id)
 	if northPaddle.is_multiplayer_authority():
-		table.rotation_degrees += 180
+		camera_2d.rotation_degrees = 180
+		camera_2d.offset = get_viewport().get_visible_rect().size
 	
 #routine after reset button is clicked
 func onResetButton():
@@ -67,9 +69,10 @@ func onResetButton():
 	if GameState.game_state==GameState.GameStates.ENDED or GameState.training==true:
 		playerScores=[0,0]
 		ui.UpdateScore(playerScores)
-	ResetBoard()
+	ResetBoard.rpc()
 	
 #reset the whole board before each point
+@rpc("authority", "call_local", "reliable")
 func ResetBoard(timeout=false):
 	if GameState.training:
 		print('Resetting board')
@@ -91,6 +94,9 @@ func ResetBoard(timeout=false):
 		if paddle.ai_flag==true:
 			paddle.unlocked=true
 	puck.apply_initial_force(playerPuckVel)
+	#reset the paddle velocities
+	northPaddle.velocity=Vector2.ZERO
+	southPaddle.velocity=Vector2.ZERO
 	
 #reset paddles to their starting positions
 func ResetPaddles(timeout:bool):
@@ -120,7 +126,10 @@ func GoalScored(player:int):
 @rpc("authority", "call_local", "reliable")
 func sync_goal_scored(player: int, scores: Array, game_over: bool):
 	playerScores = scores
-	ui.UpdateScore(playerScores)
+	if WebRtcManager._is_host:
+		ui.UpdateScore(playerScores)
+	else:
+		ui.UpdateScore([playerScores[1],playerScores[0]])
 	puck.disappear()
 	if game_over:
 		GameState.game_state = GameState.GameStates.ENDED
@@ -131,9 +140,10 @@ func sync_goal_scored(player: int, scores: Array, game_over: bool):
 		
 #reset table and start new point
 func newPoint():
-	if not GameState.training:
-		await get_tree().create_timer(2).timeout
-	ResetBoard()
+	if WebRtcManager._is_host:
+		if not GameState.training:
+			await get_tree().create_timer(2).timeout
+		ResetBoard.rpc()
 
 func start_reset_timer():
 	reset_timer_id += 1

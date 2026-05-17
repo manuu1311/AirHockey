@@ -34,6 +34,13 @@ var airl: Node2D
 var airl_speed:float =850
 @export var ai_training:bool
 
+#network variables
+#interpolation
+var network_target_position : Vector2
+#syncing interval
+var sync_timer := 0.0
+const SYNC_INTERVAL := 0.1
+
 
 func _ready() -> void:
 	airl=get_node(airl_path)
@@ -111,7 +118,6 @@ func new_difficulty():
 		handle_ai = Callable(self, "handle_ai_rl")
 		
 func reset(timeout=false):
-	print('player: ',player,' authority: ',is_multiplayer_authority(),' id: ',multiplayer.get_unique_id())
 	unlocked=false
 	position= start_position
 	last_target=position	
@@ -128,7 +134,7 @@ func reset(timeout=false):
 	if GameState.isMultiplayer and is_multiplayer_authority():
 		sync_position.rpc(position)
 	
-	'''
+'''
 	if ai_flag:
 		if airl!=null:
 			if timeout:
@@ -167,6 +173,12 @@ func _physics_process(delta):
 			handle_ai.call(delta)
 		velocity = velocity.limit_length(maxspeed)
 		move_and_slide()
+		if GameState.isMultiplayer and is_multiplayer_authority():
+			if sync_timer >= SYNC_INTERVAL:
+				sync_timer += delta
+				sync_timer = 0.0
+				# Send both current position and velocity together
+				sync_periodic_state.rpc(global_position, velocity)
 		#if training ai: detect collisions for reward
 		if GameState.training and ai_flag and ai_training:
 			passive_reward(delta)
@@ -183,20 +195,27 @@ func handle_player(delta):
 		if not unlocked:
 			if collision_shape.shape.get_rect().has_point(to_local(mouse_pos)):
 				unlocked=true
+				
 		else:
 			velocity = (mouse_pos - global_position) / delta
 			if GameState.isMultiplayer:
 				sync_target.rpc(velocity)
 			
-@rpc("authority", "call_remote", "unreliable")
+@rpc("authority", "call_remote", "unreliable_ordered")
 func sync_target(target: Vector2):
-	velocity = Vector2(-target.x,-target.y)
+	velocity = Vector2(target.x,target.y)
 	
 @rpc("authority", "call_remote", "reliable")
 func sync_position(pos: Vector2):
 	position = Vector2(pos.x, pos.y)
-	velocity=Vector2.ZERO
-	
+	velocity=Vector2(0,0)
+
+@rpc("authority", "call_remote", "unreliable_ordered")
+func sync_periodic_state(auth_pos: Vector2, auth_vel: Vector2):
+	# If the drift is small, you can teleport it. 
+	# If it's a big jump, it might look glitchy (see Linear Interpolation below).
+	global_position = auth_pos
+	velocity = auth_vel
 	
 #handle ai movement
 func handle_ai_easy(delta):

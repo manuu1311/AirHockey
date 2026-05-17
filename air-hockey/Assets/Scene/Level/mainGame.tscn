@@ -78,4 +78,8 @@ script = ExtResource("7_eipe5")
 
 [node name="ModelInference" parent="." unique_id=588715386 instance=ExtResource("9_7qndf")]
 
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1714393616]
+anchor_mode = 0
+ignore_rotation = false
+
 [editable path="Table/Puck"]
