@@ -40,6 +40,7 @@ func _on_game_ready():
 	
 func _call_start_game_deferred():
 	print("Host sending start_game RPC...")
+	await get_tree().create_timer(1.5).timeout
 	start_game.rpc()
 
 func _switch_to_game():

@@ -2,16 +2,14 @@ extends Node
 
 
 @export var puck_path: NodePath
-@export var northPaddlePath: NodePath
-@export var southPaddlePath: NodePath
 @export var uiPath: NodePath
 @export var tablePath: NodePath
 @onready var camera_2d: Camera2D = $"../Camera2D"
+@onready var northPaddle: CharacterBody2D = $"../Table/PaddleN"
+@onready var southPaddle: CharacterBody2D = $"../Table/PaddleS"
 
 
 var puck
-var northPaddle
-var southPaddle
 var goalSignal
 var ui
 var table
@@ -27,9 +25,8 @@ var reset_timer_id := 0
 
 
 func _ready():
+	print('readying')
 	puck = get_node(puck_path)
-	northPaddle = get_node(northPaddlePath)
-	southPaddle = get_node(southPaddlePath)
 	ui=get_node(uiPath)
 	table=get_node(tablePath)
 	ui.restartButtonPressedSignal.connect(onResetButton)
@@ -74,6 +71,7 @@ func onResetButton():
 #reset the whole board before each point
 @rpc("authority", "call_local", "reliable")
 func ResetBoard(timeout=false):
+	print('resetting board')
 	if GameState.training:
 		print('Resetting board')
 		reset_timer_id += 1  
@@ -118,10 +116,11 @@ func GoalScored(player:int):
 	if GameState.game_state==GameState.GameStates.PLAYING:
 		IncreaseScore(player)
 		puck.disappear()
-		if playerScores[player] >= winScore:
-			sync_goal_scored.rpc(player, playerScores, true)
+		var has_won = playerScores[player] >= winScore
+		if GameState.isMultiplayer:
+			sync_goal_scored.rpc(player, playerScores, has_won)
 		else:
-			sync_goal_scored.rpc(player, playerScores, false)
+			sync_goal_scored(player, playerScores, has_won)
 	
 @rpc("authority", "call_local", "reliable")
 func sync_goal_scored(player: int, scores: Array, game_over: bool):
@@ -144,6 +143,10 @@ func newPoint():
 		if not GameState.training:
 			await get_tree().create_timer(2).timeout
 		ResetBoard.rpc()
+	elif not GameState.isMultiplayer:
+		if not GameState.training:
+			await get_tree().create_timer(2).timeout
+		ResetBoard()
 
 func start_reset_timer():
 	reset_timer_id += 1
