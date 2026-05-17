@@ -11,9 +11,9 @@ var _should_sync := false
 var _remote_pos := Vector2.ZERO
 var _remote_vel := Vector2.ZERO
 var _remote_ang_vel := 0.0
-var _packet_received_at_ms: int = 0  # wall-clock time the packet arrived
+var _packet_received_at_ms: int = 0  
 
-@export var snap_threshold: float = 250.0        # px — hard snap beyond this
+@export var snap_threshold: float = 250.0      
 @export var blend_threshold: float = 40.0        # px — below this, skip pos correction
 @export var pos_correction_strength: float = 0.25 # [0..1] per frame blend
 var maxspeed := 2000
@@ -50,8 +50,6 @@ func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 	if _should_sync:
 		# --- Dead reckoning ---
 		# Compensate for the time between packet arrival and this physics step.
-		# This alone won't fix network latency, but it removes the processing delay
-		# and dramatically reduces perceived lag at normal frame rates.
 		var age_sec := (Time.get_ticks_msec() - _packet_received_at_ms) / 1000.0
 		var predicted_pos := _remote_pos + _remote_vel * age_sec
 
@@ -70,7 +68,6 @@ func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 		# else: within tolerance — leave position alone, velocity will converge it
 
 		# *** Apply velocity DIRECTLY — never lerp velocity. ***
-		# Lerping velocity is the main source of the "dragging" lag feel.
 		state.linear_velocity = _remote_vel
 		state.angular_velocity = _remote_ang_vel
 		_should_sync = false
@@ -106,5 +103,5 @@ func sync_puck(pos: Vector2, vel: Vector2, ang_vel: float) -> void:
 	_remote_pos = pos
 	_remote_vel = vel
 	_remote_ang_vel = ang_vel
-	_packet_received_at_ms = Time.get_ticks_msec()  # stamp arrival time
+	_packet_received_at_ms = Time.get_ticks_msec() 
 	_should_sync = true
