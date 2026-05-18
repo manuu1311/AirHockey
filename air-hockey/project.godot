@@ -10,11 +10,13 @@ config_version=5
 
 [application]
 
-config/name="AirHockey"
+config/name="Air Hockey"
 run/main_scene="uid://buk5w0winnywt"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 run/max_fps=60
-config/icon="res://icon.svg"
+boot_splash/image="uid://bm7chsl2opn4b"
+config/icon="uid://bm7chsl2opn4b"
+boot_splash/minimum_display_time=1000
 
 [autoload]
 
@@ -28,6 +30,8 @@ WebRtcManager="*uid://dtm4o77dwg5wo"
 window/size/viewport_width=800
 window/size/viewport_height=900
 window/stretch/mode="viewport"
+mouse_cursor/custom_image="uid://ci81vf4m8dyiw"
+mouse_cursor/custom_image_hotspot=Vector2(8, 14)
 
 [dotnet]
 

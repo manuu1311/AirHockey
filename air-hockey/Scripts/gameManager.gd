@@ -125,7 +125,7 @@ func GoalScored(player:int):
 @rpc("authority", "call_local", "reliable")
 func sync_goal_scored(player: int, scores: Array, game_over: bool):
 	playerScores = scores
-	if WebRtcManager.is_host:
+	if WebRtcManager.is_host or not GameState.isMultiplayer:
 		ui.UpdateScore(playerScores)
 	else:
 		ui.UpdateScore([playerScores[1],playerScores[0]])

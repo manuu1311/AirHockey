@@ -7,6 +7,9 @@ extends CharacterBody2D
 @onready var puck=get_node(puck_path)
 @onready var collision_shape = $CollisionShape2D
 @export var difficulty: int = -1
+#cursors
+var normal_cursor = preload("res://cursor_normal.png")
+var hover_cursor = preload("res://cursor_hover.png")
 #variable to lock the paddle movement in point start
 var unlocked=false
 var maxspeed=3000
@@ -119,6 +122,7 @@ func new_difficulty():
 		
 func reset(timeout=false):
 	unlocked=false
+	_on_mouse_exited()
 	position= start_position
 	last_target=position	
 	velocity=Vector2(0,0)
@@ -192,6 +196,10 @@ func _physics_process(delta):
 func handle_player(delta):
 	if is_multiplayer_authority():
 		var mouse_pos = get_global_mouse_position()
+		if collision_shape.shape.get_rect().has_point(to_local(mouse_pos)):
+			_on_mouse_entered()
+		else:
+			_on_mouse_exited()
 		if not unlocked:
 			if collision_shape.shape.get_rect().has_point(to_local(mouse_pos)):
 				unlocked=true
@@ -200,6 +208,21 @@ func handle_player(delta):
 			velocity = (mouse_pos - global_position) / delta
 			if GameState.isMultiplayer:
 				sync_target.rpc(velocity)
+				
+#change cursor
+func _on_mouse_entered():
+	Input.set_custom_mouse_cursor(
+	hover_cursor,
+	Input.CURSOR_ARROW,
+	Vector2(16, 16)
+)
+#reset cursor
+func _on_mouse_exited():
+	Input.set_custom_mouse_cursor(
+	normal_cursor,
+	Input.CURSOR_ARROW,
+	Vector2(8, 14)
+)
 			
 @rpc("authority", "call_remote", "unreliable_ordered")
 func sync_target(target: Vector2):
@@ -345,6 +368,7 @@ func puck_position_rew(delta:float):
 		airl.puck_position_reward(sign_r, delta)
 		'''
 	airl.puck_position_reward(delta)	
+	
 #passive negative reward to promote shorter points
 func passive_reward(delta: float):
 	airl.passive_reward(delta)
