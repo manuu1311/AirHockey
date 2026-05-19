@@ -1,11 +1,7 @@
 # AirHockey
-Air Hockey implementation to learn Godot
-
-Play with scripted opponents, an RL agent, or online [here](https://manuu1311.github.io/AirHockey/)
-
-A fast-paced Air Hockey game built in Godot, created as a playground for gameplay programming and reinforcement learning experiments.
-
-Play against:
+A fast-paced Air Hockey game built in Godot, created as a playground for programming and reinforcement learning experiments.  
+  
+Play against:  
 
 Scripted AI opponents
 A reinforcement learning agent
@@ -15,13 +11,13 @@ Try it in your browser here:
 [Air Hockey](https://manuu1311.github.io/AirHockey/)
 
 ## Training
-Early Exploration
+### Early Exploration
+The agent experimenting with basic puck control and learning how to interact with the environment.  
+<img width="1280" height="720" alt="early" src="https://github.com/user-attachments/assets/c62b38ab-b36c-4827-9f11-c88e3fd0a205" />
+### Parallel Self-Play Training
+Parallel training through self-play with policy pool.  
+<img width="1280" height="720" alt="parallel" src="https://github.com/user-attachments/assets/2ad5af9c-3717-453e-8fb9-026c43e161fa" />
 
-The agent experimenting with basic puck control and learning how to interact with the environment.
-
-Parallel Self-Play Training
-Parallel training through self-play with policy pool.
 
 ## Credits
-The multiplayer server implementation was adapted from:
-
+The multiplayer server implementation was adapted from [this example](https://github.com/Faless/gd-webrtc-signalling)
