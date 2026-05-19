@@ -1,5 +1,8 @@
 # AirHockey
-A fast-paced Air Hockey game built in Godot, created as a playground for programming and reinforcement learning experiments.  
+A fast-paced Air Hockey game built in Godot, created as a playground for programming and reinforcement learning experiments. 
+## Play Online
+🎮 Try it directly in your browser here:  
+[Air Hockey](https://manuu1311.github.io/AirHockey/)
 ## Features
 Play against:  
 | Mode | Description |
@@ -7,9 +10,6 @@ Play against:
 | ⚙️ Scripted AI | Scripted rule-based opponents |
 | 🤖 RL Agent | Self-play trained reinforcement learning agent |
 | 🌍 Online Multiplayer | Online with friends |
-
-Try it in your browser here:  
-[Air Hockey](https://manuu1311.github.io/AirHockey/)
 
 ## Training
 ### Early Exploration
