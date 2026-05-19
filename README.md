@@ -11,6 +11,11 @@ Play against:
 | **🤖 RL Agent** | Self-play trained reinforcement learning agent |
 | **🌍 Online Multiplayer** | Online with friends |
 
+## 🛠️ Tools
+* **Game Engine:** Godot 4.6  
+* **Networking:** WebRTC  
+* **RL Framework:** Godot RL Agents, Stable Baselines3
+
 ## Training
 ### Early Exploration
 The agent experimenting with basic puck control and learning how to interact with the environment.  
