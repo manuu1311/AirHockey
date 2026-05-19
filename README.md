@@ -6,7 +6,7 @@ Play against:
 |---|---|
 | ⚙️ Scripted AI | Scripted rule-based opponents |
 | 🤖 RL Agent | Self-play trained reinforcement learning agent |
-| 🌍 Online Multiplayer | Play with friends |
+| 🌍 Online Multiplayer | Online with friends |
 
 Try it in your browser here:  
 [Air Hockey](https://manuu1311.github.io/AirHockey/)
