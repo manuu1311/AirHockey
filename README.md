@@ -21,7 +21,7 @@ To export the game in a standard web browser, the inference was manually reimple
 * **Model Size:** To guarantee a smooth experience on the web, various network architectures were assessed. The final model uses a compact architecture of **2 hidden layers with 128 units each** (~19k parameters).  
 
 ## Training
-The RL agent was trained using **curriculum learning** and **self-play with a policy pool**, starting with simple objectives (puck tracking, basic control) and progressively scaling to full matches. From there, it trained against past versions of itself. Combined with reward shaping, these techniques helped the network converge faster and develop increasingly robust strategies.  
+The RL agent was trained using **curriculum learning** and **self-play with a policy pool**, starting with simple objectives (puck tracking, basic control) and progressively scaling to full matches. From there, it trained against past versions of itself. Combined with reward shaping, these techniques helped the network converge faster and develop more robust strategies.  
 
 ### Early Exploration
 The agent experimenting with basic puck control and learning how to interact with the environment.  
