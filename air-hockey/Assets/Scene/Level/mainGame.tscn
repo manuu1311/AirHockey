@@ -100,6 +100,7 @@ script = ExtResource("5_86wvc")
 puck_path = NodePath("../Table/Puck")
 uiPath = NodePath("../Canvas")
 tablePath = NodePath("../Table")
+winScore = 5
 
 [node name="GameState" type="Node" parent="." unique_id=466700336]
 script = ExtResource("7_eipe5")

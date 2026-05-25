@@ -16,9 +16,9 @@ func _ready() -> void:
 	}
 
 func PlaySound(sound: String)->void:
+	pitch_scale=1
 	if muted:
 		return
-	pitch_scale=1
 	stream=fx[sound]
 	play()
 	

@@ -182,6 +182,6 @@ func _on_body_entered(body: Node) -> void:
 		
 	var target_volume:float = remap(speed, 50, 2500, -5, 0)
 	hit_player.volume_db = clamp(target_volume, -5, 0)
-	var base_pitch:float = remap(speed, 50, 2500, 1.1, 0.7)
+	var base_pitch:float = remap(speed, 50, 2500, 2, 0.4)
 	hit_player.pitch_scale = base_pitch + randf_range(-0.08, 0.08)
 	hit_player.play()

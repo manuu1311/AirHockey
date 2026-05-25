@@ -17,7 +17,7 @@ var table
 var playerScores: Array=[0,0]
 var playerPuckVel: int
 
-@export var winScore: int=5
+@export var winScore: int=1
 
 #reset timer variables 
 var reset_delay := 60.0
