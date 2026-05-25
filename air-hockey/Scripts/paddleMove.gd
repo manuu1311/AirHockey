@@ -178,8 +178,8 @@ func _physics_process(delta):
 		velocity = velocity.limit_length(maxspeed)
 		move_and_slide()
 		if GameState.isMultiplayer and is_multiplayer_authority():
+			sync_timer += delta
 			if sync_timer >= SYNC_INTERVAL:
-				sync_timer += delta
 				sync_timer = 0.0
 				# Send both current position and velocity together
 				sync_periodic_state.rpc(global_position, velocity)

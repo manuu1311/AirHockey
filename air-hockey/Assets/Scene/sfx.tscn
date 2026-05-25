@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://brb7esiiw6vrv"]
+
+[ext_resource type="AudioStream" uid="uid://bi1qholp1thl1" path="res://Sounds/321.mp3" id="1_fem1l"]
+[ext_resource type="Script" uid="uid://couflw3giuluq" path="res://Scripts/sfx.gd" id="2_rcvr8"]
+
+[node name="SFX" type="AudioStreamPlayer" unique_id=371828760]
+stream = ExtResource("1_fem1l")
+autoplay = true
+script = ExtResource("2_rcvr8")

@@ -7,6 +7,7 @@ extends CanvasLayer
 @onready var finalTextLabel= $UI/FinalText
 signal restartButtonPressedSignal
 signal countdownFinished
+signal musicOff
 
 func _ready() -> void:
 	countdownLabel.hide()
@@ -34,9 +35,11 @@ func startCountdown():
 	var numbers = [3, 2, 1]
 	for n in numbers:
 		countdownLabel.text = str(n)
+		Sfx.PlaySound('321')
 		await get_tree().create_timer(1.0).timeout
 
 	countdownLabel.text = "GO!"
+	Sfx.PlayGo()
 	await get_tree().create_timer(0.5).timeout
 
 	countdownLabel.hide()
@@ -45,3 +48,13 @@ func startCountdown():
 
 func _on_texture_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://Assets/Scene/Level/mainMenu.tscn")
+
+
+func _on_music_icon_pressed() -> void:
+	musicOff.emit()
+	var bar: ColorRect=$UI/MusicIcon/ColorRect
+	if Sfx.muted:
+		bar.show()
+	else:
+		bar.hide()
+	

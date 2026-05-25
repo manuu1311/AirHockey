@@ -7,6 +7,7 @@ extends Node
 @onready var camera_2d: Camera2D = $"../Camera2D"
 @onready var northPaddle: CharacterBody2D = $"../Table/PaddleN"
 @onready var southPaddle: CharacterBody2D = $"../Table/PaddleS"
+@onready var bg_music: AudioStreamPlayer = $"../BGMusic"
 
 
 var puck
@@ -25,9 +26,9 @@ var reset_timer_id := 0
 
 
 func _ready():
-	print('readying')
 	puck = get_node(puck_path)
 	ui=get_node(uiPath)
+	ui.musicOff.connect(MusicOff)
 	table=get_node(tablePath)
 	ui.restartButtonPressedSignal.connect(onResetButton)
 	table.goalScored.connect(GoalScored)
@@ -134,7 +135,9 @@ func sync_goal_scored(player: int, scores: Array, game_over: bool):
 		GameState.game_state = GameState.GameStates.ENDED
 		ui.endGame(player)
 		puck.reset()
+		PlayFinalSound(player)
 	else:
+		PlayGolSound(player)
 		newPoint()
 		
 #reset table and start new point
@@ -157,3 +160,36 @@ func start_reset_timer():
 	# only trigger if this is still the latest timer
 	if my_id == reset_timer_id:
 		ResetBoard(true)
+		
+func PlayFinalSound(has_won: int)->void:
+	if GameState.isMultiplayer:
+		if has_won==0 and WebRtcManager.is_host:
+			Sfx.PlaySound('win')
+		else:
+			Sfx.PlaySound('lose')
+	else:
+		if has_won==0:
+			Sfx.PlaySound('win')
+		else:
+			Sfx.PlaySound('lose')
+			
+func PlayGolSound(player:int)->void:
+	if GameState.isMultiplayer:
+		if player==0 and WebRtcManager.is_host:
+			Sfx.PlaySound('gol')
+		else:
+			Sfx.PlaySound('taken')
+	else:
+		if player==0:
+			Sfx.PlaySound('gol')
+		else:
+			Sfx.PlaySound('taken')
+
+
+func MusicOff():
+	Sfx.muted=not Sfx.muted
+	if Sfx.muted:
+		bg_music.stop()
+	else:
+		bg_music.play()
+	

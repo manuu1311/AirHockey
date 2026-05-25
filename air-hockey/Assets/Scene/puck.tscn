@@ -14,6 +14,8 @@ collision_layer = 4
 collision_mask = 11
 physics_material_override = SubResource("PhysicsMaterial_hpaga")
 gravity_scale = 0.0
+contact_monitor = true
+max_contacts_reported = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=818533871]
 position = Vector2(-5.08, 1.485)
@@ -24,3 +26,7 @@ debug_color = Color(0, 0.4509804, 0.5294118, 1)
 [node name="Sprite2D" type="Sprite2D" parent="CollisionShape2D" unique_id=625307370]
 position = Vector2(5.08, -1.485)
 texture = ExtResource("1_jolum")
+
+[node name="HitPlayer" type="AudioStreamPlayer2D" parent="." unique_id=1858828434]
+
+[node name="SlidePlayer" type="AudioStreamPlayer2D" parent="." unique_id=973573903]

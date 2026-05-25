@@ -1,4 +1,5 @@
 extends AIController2D
+class_name Paddle
 
 var move:= Vector2.ZERO	
 @onready var table: Sprite2D = $"../.."
