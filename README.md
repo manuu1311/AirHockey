@@ -25,10 +25,11 @@ The RL agent was trained using **curriculum learning** and **self-play with a po
 
 ### Early Exploration
 The agent experimenting with basic puck control and learning how to interact with the environment.  
-<img width="640" height="360" alt="parallel" src="https://github.com/user-attachments/assets/2ad5af9c-3717-453e-8fb9-026c43e161fa" />
+<img src="https://github.com/user-attachments/assets/2ad5af9c-3717-453e-8fb9-026c43e161fa" alt="Early Exploration" style="max-width: 100%; height: auto;" />
+
 ### Parallel Self-Play Training
 Parallel training through self-play with policy pool.  
-<img width="640" height="360" alt="early" src="https://github.com/user-attachments/assets/c62b38ab-b36c-4827-9f11-c88e3fd0a205" />
+<img src="https://github.com/user-attachments/assets/c62b38ab-b36c-4827-9f11-c88e3fd0a205" alt="Parallel Self-Play" style="max-width: 100%; height: auto;" />
 
 
 ## Credits
