@@ -1,2 +1,5 @@
 /logs
 addons/
+exports/
+BuildProfiles/
+*.gdbuild
