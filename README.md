@@ -33,19 +33,19 @@ Parallel training through self-play with policy pool.
 
 ## 🏒 Gameplay
 
-**ML Agent gameplay**
+**ML Agent gameplay**  
 https://github.com/user-attachments/assets/095c6937-c853-4db4-99ef-b9d83539ac66
 
 
 ---
 
-**Goal scored against ML Agent**
+**Goal scored against ML Agent**  
 https://github.com/user-attachments/assets/6c895822-e11e-427e-9c57-f3a4487b139e
 
 
 ---
 
-**Scripted AI — Hard mode**
+**Scripted AI — Hard mode**  
 https://github.com/user-attachments/assets/7d133f8d-48ad-4677-b663-e4e35e0593ae
 
 
