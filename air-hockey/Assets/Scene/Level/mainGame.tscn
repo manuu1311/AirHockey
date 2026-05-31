@@ -113,12 +113,11 @@ ignore_rotation = false
 
 [node name="BGMusic" type="AudioStreamPlayer" parent="." unique_id=1691673850]
 stream = ExtResource("13_08gt7")
-volume_db = -5.493
+volume_db = -10.028
 autoplay = true
 
 [node name="SFX" parent="." unique_id=371828760 instance=ExtResource("15_ifrkl")]
 stream = SubResource("AudioStreamWAV_ifrkl")
-autoplay = false
 
 [connection signal="body_entered" from="Table/Puck" to="Table/Puck" method="_on_body_entered"]
 

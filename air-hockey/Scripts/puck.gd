@@ -50,9 +50,18 @@ func reset():
 	# Reset authority back to server/host on reset
 	if GameState.isMultiplayer:
 		set_multiplayer_authority(PLAYER_1_ID)
+		if multiplayer.is_server():
+			rpc("switch_authority", PLAYER_1_ID)
 
 
 func apply_initial_force(player: int):
+	if GameState.isMultiplayer:
+		rpc("sync_initial_force", player)
+	else:
+		call_deferred("_apply_force_deferred", player)
+
+@rpc("any_peer", "call_local", "reliable")
+func sync_initial_force(player: int) -> void:
 	call_deferred("_apply_force_deferred", player)
 
 func _apply_force_deferred(player: int) -> void:
@@ -140,7 +149,7 @@ func _physics_process(delta: float) -> void:
 func _check_authority_handoff() -> void:
 	var current_auth = get_multiplayer_authority()
 	
-	# Assuming Player 1 handles Y < 450 (Top) and Player 2 handles Y > 450 (Bottom)
+	# Player 1 handles Y < 450 (Top) and Player 2 handles Y > 450 (Bottom)
 	if global_position.y > MIDDLE_LINE_Y and current_auth != PLAYER_2_ID:
 		# Pass authority to Player 2
 		rpc("switch_authority", PLAYER_2_ID)
@@ -152,7 +161,7 @@ func _check_authority_handoff() -> void:
 		set_multiplayer_authority(PLAYER_1_ID)
 
 
-@rpc("authority", "call_local", "reliable")
+@rpc("any_peer", "call_local", "reliable")
 func switch_authority(new_auth_id: int) -> void:
 	set_multiplayer_authority(new_auth_id)
 

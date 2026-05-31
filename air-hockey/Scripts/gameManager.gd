@@ -76,10 +76,10 @@ func ResetBoard(timeout=false):
 	if GameState.training:
 		print('Resetting board')
 		reset_timer_id += 1  
+		start_reset_timer()  
 		#give puck to the ai
 		#-1: north 1: south 0:no force
 		#playerPuckVel=1
-	start_reset_timer()  
 	GameState.game_state=GameState.GameStates.COUNTDOWN
 	ResetPaddles(timeout)
 	puck.reset()
@@ -169,9 +169,9 @@ func PlayFinalSound(has_won: int)->void:
 			Sfx.PlaySound('lose')
 	else:
 		if has_won==0:
-			Sfx.PlaySound('win')
-		else:
 			Sfx.PlaySound('lose')
+		else:
+			Sfx.PlaySound('win')
 			
 func PlayGolSound(player:int)->void:
 	if GameState.isMultiplayer:

@@ -148,8 +148,8 @@ shape = SubResource("RectangleShape2D_0x6sf")
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/NWWall" unique_id=444196862]
-position = Vector2(-354, 187.00002)
-rotation = -0.6230825
+position = Vector2(-350.705, 191.47)
+rotation = -0.8552113
 shape = SubResource("RectangleShape2D_emyag")
 
 [node name="SWWall" type="StaticBody2D" parent="Walls" unique_id=1880029019]
