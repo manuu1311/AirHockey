@@ -31,6 +31,27 @@ The agent experimenting with basic puck control and learning how to interact wit
 Parallel training through self-play with policy pool.  
 <img src="https://github.com/user-attachments/assets/c62b38ab-b36c-4827-9f11-c88e3fd0a205" alt="Parallel Self-Play" style="max-width: 100%; height: auto;" />
 
+## 🏒 Gameplay
+
+https://github.com/user-attachments/assets/095c6937-c853-4db4-99ef-b9d83539ac66
+
+**ML Agent gameplay**
+
+---
+
+https://github.com/user-attachments/assets/6c895822-e11e-427e-9c57-f3a4487b139e
+
+**Goal scored against ML Agent**
+
+---
+
+https://github.com/user-attachments/assets/7d133f8d-48ad-4677-b663-e4e35e0593ae
+
+**Scripted AI — Hard mode**
+
+
+
+
 
 ## Credits
 The multiplayer signaling server implementation was adapted from [this example](https://github.com/Faless/gd-webrtc-signalling)
